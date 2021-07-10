@@ -19,7 +19,7 @@ namespace SimpleBankingSystem
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options => options
+            services.AddDbContext<SBSDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddDatabaseDeveloperPageExceptionFilter();
@@ -32,7 +32,7 @@ namespace SimpleBankingSystem
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<SBSDbContext>();
 
             services.AddControllersWithViews();
         }
