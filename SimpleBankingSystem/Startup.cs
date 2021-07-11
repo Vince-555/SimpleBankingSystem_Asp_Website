@@ -8,6 +8,7 @@ namespace SimpleBankingSystem
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using SimpleBankingSystem.Data;
+    using SimpleBankingSystem.Infrastructure;
 
     public class Startup
     {
@@ -39,6 +40,8 @@ namespace SimpleBankingSystem
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.PrepareDatabase();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -60,6 +63,7 @@ namespace SimpleBankingSystem
                     endpoints.MapDefaultControllerRoute();
                     endpoints.MapRazorPages();
                 });
+
         }
     }
 }
