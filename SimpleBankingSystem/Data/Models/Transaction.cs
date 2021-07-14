@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
 {
@@ -16,6 +14,7 @@ namespace SimpleBankingSystem.Data.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Ammount { get; set; }
 
+        [MaxLength(TransactionDescriptionMaxLength)]
         public string Description { get; set; }
 
         public DateTime Date { get; set; }

@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
+using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
 {
@@ -13,10 +10,13 @@ namespace SimpleBankingSystem.Data.Models
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
+        [MaxLength(AddressMaxLength)]
         public string StreetAddress { get; set; }
 
+        [MaxLength(GeneralInputFieldMaxLenght)]
         public string City { get; set; }
 
+        [MaxLength(GeneralInputFieldMaxLenght)]
         public string Country { get; set; }
 
         [Required]
