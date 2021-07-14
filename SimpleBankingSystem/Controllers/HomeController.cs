@@ -11,22 +11,27 @@ namespace SimpleBankingSystem.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
 
         public IActionResult Index()
         {
-            return View();
+            return this.View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Login()
         {
-            return View();
+            return this.View();
         }
+
+        public IActionResult Register()
+        {
+            return this.View();
+        }
+
+        public IActionResult ForgotPassword()
+        {
+            return this.View();
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
