@@ -14,10 +14,21 @@ namespace SimpleBankingSystem.Controllers
 
         public IActionResult Index()
         {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                this.RedirectToPage("login.cshtml");
+            }
+            
             return this.View();
         }
 
         public IActionResult Login()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult Login(LoginFormModel model)
         {
             return this.View();
         }
@@ -27,7 +38,19 @@ namespace SimpleBankingSystem.Controllers
             return this.View();
         }
 
+        [HttpPost]
+        public IActionResult Register(RegisterFormModel model)
+        {
+            return this.View();
+        }
+
         public IActionResult ForgotPassword()
+        {
+            return this.View();
+        }
+
+        [HttpPost]
+        public IActionResult ForgotPassword(ForgotPasswordFormModel model)
         {
             return this.View();
         }
