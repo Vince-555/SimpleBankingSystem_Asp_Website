@@ -14,7 +14,7 @@ namespace SimpleBankingSystem.Data.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Column(TypeName = "decimal(18,2)")]
-        public decimal Balance { get; set; }
+        public decimal Balance { get; set; } = Convert.ToDecimal(new Random().Next(9500, 235850)); //pre set balance for educational purposes
 
         [Required]
         public string UserId { get; set; }
