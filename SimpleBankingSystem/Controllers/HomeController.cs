@@ -55,11 +55,11 @@ namespace SimpleBankingSystem.Controllers
             return this.View();
         }
 
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult TestError()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            SuccessOrErrorMessageForPartialViewModel model = null;
+            return this.View(model);
+           
         }
     }
 }
