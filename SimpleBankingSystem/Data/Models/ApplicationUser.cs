@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.ComponentModel.DataAnnotations;
 using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
 {
-    public class User
+    public class ApplicationUser :IdentityUser
     {
-        [Required]
-        [Key]
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-
         [Required]
         [MaxLength(UserNamesMaxLength)]
         public string FirstName { get; set; }
@@ -17,15 +14,6 @@ namespace SimpleBankingSystem.Data.Models
         [Required]
         [MaxLength(UserNamesMaxLength)]
         public string LastName { get; set; }
-
-        [Required]
-        [MaxLength(EmailAddressMaxLength)]
-        public string Email { get; set; }
-
-        [Required]
-        public string Password { get; set; }
-
-        public bool IsAdmin { get; set; }
 
         [Required]
         public string BankAccountId { get; set; }

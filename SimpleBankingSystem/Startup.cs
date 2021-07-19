@@ -9,6 +9,7 @@ namespace SimpleBankingSystem
     using Microsoft.Extensions.Hosting;
     using SimpleBankingSystem.Data;
     using SimpleBankingSystem.Infrastructure;
+    using SimpleBankingSystem.Data.Models;
 
     public class Startup
     {
@@ -26,7 +27,7 @@ namespace SimpleBankingSystem
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services
-                .AddDefaultIdentity<IdentityUser>(options =>
+                .AddDefaultIdentity<ApplicationUser>(options =>
                 {
                     options.Password.RequireDigit = false;  //can be changed later
                     options.Password.RequireLowercase = false;

@@ -7,7 +7,7 @@ using System.Text;
 
 namespace SimpleBankingSystem.Data
 {
-    public class SBSDbContext : IdentityDbContext
+    public class SBSDbContext : IdentityDbContext<ApplicationUser>
     {
         public SBSDbContext(DbContextOptions<SBSDbContext> options)
             : base(options)
@@ -24,13 +24,12 @@ namespace SimpleBankingSystem.Data
 
         public DbSet<Transaction> Transactions { get; set; }
 
-        public DbSet<User> BankUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.Address)
             .WithOne(a => a.User)
             .HasForeignKey<Address>(c => c.UserId);
@@ -38,9 +37,9 @@ namespace SimpleBankingSystem.Data
             modelBuilder.Entity<Address>()
             .HasOne(x => x.User)
             .WithOne(x => x.Address)
-            .HasForeignKey<User>(x => x.AddressId);
+            .HasForeignKey<ApplicationUser>(x => x.AddressId);
 
-            modelBuilder.Entity<User>()
+            modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.BankAccount)
             .WithOne(a => a.User)
             .HasForeignKey<BankAccount>(c => c.UserId);
@@ -48,7 +47,7 @@ namespace SimpleBankingSystem.Data
             modelBuilder.Entity<BankAccount>()
             .HasOne(a => a.User)
             .WithOne(a => a.BankAccount)
-            .HasForeignKey<User>(c => c.BankAccountId);
+            .HasForeignKey<ApplicationUser>(c => c.BankAccountId);
         }
 
     }
