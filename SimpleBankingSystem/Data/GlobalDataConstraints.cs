@@ -13,9 +13,15 @@
 
         public const int UserNamesMaxLength = 30;
 
+        public const int UserNamesMinLength = 2;
+
         public const int EmailAddressMaxLength = 320;
 
         public const int UserVirginPasswordMaxLength = 120;
+
+        public const int MinPasswordLength = 6;
+
+        public const string EmailRegEx = @"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$";
 
 
     }

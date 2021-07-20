@@ -10,6 +10,7 @@ namespace SimpleBankingSystem
     using SimpleBankingSystem.Data;
     using SimpleBankingSystem.Infrastructure;
     using SimpleBankingSystem.Data.Models;
+    using SimpleBankingSystem.Services;
 
     public class Startup
     {
@@ -34,9 +35,15 @@ namespace SimpleBankingSystem
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
-                .AddEntityFrameworkStores<SBSDbContext>();
+                .AddEntityFrameworkStores<SBSDbContext>()
+
+                .AddErrorDescriber<AppErrorDescriber>();
 
             services.AddControllersWithViews();
+
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/user/login");
+
+            services.AddScoped<IErrorCollector, ErrorCollector>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

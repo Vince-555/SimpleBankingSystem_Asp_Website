@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -22,9 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Views\Home\forgotpassword.cshtml" />
-    <None Include="Views\Home\login.cshtml" />
-    <None Include="Views\Home\register.cshtml" />
+    <None Include="Views\User\login.cshtml" />
+    <None Include="Views\User\register.cshtml" />
   </ItemGroup>
 
 </Project>

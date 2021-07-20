@@ -1,3 +1,4 @@
+@model SuccessOrErrorMessageForPartialViewModel
 <!DOCTYPE html>
 <html>
 
@@ -24,6 +25,7 @@
                     </div>
                     <div class="col-lg-7">
                         <div class="p-5">
+                            @{ Html.RenderPartial("_SuccessErrorPartial", this.Model); }
                             <div class="text-center">
                                 <h4 class="text-dark mb-4">Create an Account!</h4>
                             </div>
