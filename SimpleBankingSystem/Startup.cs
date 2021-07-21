@@ -44,6 +44,8 @@ namespace SimpleBankingSystem
             services.ConfigureApplicationCookie(options => options.LoginPath = "/user/login");
 
             services.AddScoped<IErrorCollector, ErrorCollector>();
+
+            services.AddScoped<IGetUserService, GetUserService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

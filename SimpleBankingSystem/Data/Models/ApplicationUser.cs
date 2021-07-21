@@ -15,6 +15,8 @@ namespace SimpleBankingSystem.Data.Models
         [MaxLength(UserNamesMaxLength)]
         public string LastName { get; set; }
 
+        public string PhotoUrl { get; set; } = DefaultUserPhotoLocation;
+
         [Required]
         public string BankAccountId { get; set; }
 

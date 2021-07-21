@@ -9,7 +9,7 @@ namespace SimpleBankingSystem.Data.Models
     {
         [Required]
         [Key]
-        public string Id { get; set; } = Guid.NewGuid().ToString().Substring(0, 7);
+        public string Id { get; set; } = Guid.NewGuid().ToString("N").Substring(0, 7);
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Ammount { get; set; }

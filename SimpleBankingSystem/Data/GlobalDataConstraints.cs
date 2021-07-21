@@ -23,6 +23,12 @@
 
         public const string EmailRegEx = @"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$";
 
+        public const string DefaultUserPhotoLocation = "/img/avatars/default_avatar.png";
+
+        public const int IbanMinLength = 16;
+
+        public const int IbanMaxLength = 31;
+
 
     }
 }
