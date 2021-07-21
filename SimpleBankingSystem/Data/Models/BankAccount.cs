@@ -24,7 +24,11 @@ namespace SimpleBankingSystem.Data.Models
 
         public ApplicationUser User { get; set; }
 
-        public ICollection<Transaction> Transactions { get; set; }
+        [InverseProperty("Sender")]
+        public ICollection<Transaction> SentTransactions { get; set; }
+
+        [InverseProperty("Receiver")]
+        public ICollection<Transaction> ReceivedTransactions { get; set; }
 
         public ICollection<Card> Cards { get; set; }
     }

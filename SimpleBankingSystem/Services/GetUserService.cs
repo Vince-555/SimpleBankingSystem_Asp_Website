@@ -15,7 +15,9 @@ namespace SimpleBankingSystem.Services
             return manager.Users
                 .Where(x => x.UserName == userName)
                 .Include(x => x.BankAccount)
-                .ThenInclude(x => x.Transactions)
+                .ThenInclude(x => x.SentTransactions)
+                .Include(x=>x.BankAccount)
+                .ThenInclude(x=>x.ReceivedTransactions)
                 .Include(x => x.BankAccount)
                 .ThenInclude(x => x.Cards)
                 .FirstOrDefault();

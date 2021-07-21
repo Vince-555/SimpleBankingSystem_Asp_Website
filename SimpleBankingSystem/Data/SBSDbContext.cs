@@ -48,6 +48,17 @@ namespace SimpleBankingSystem.Data
             .HasOne(a => a.User)
             .WithOne(a => a.BankAccount)
             .HasForeignKey<ApplicationUser>(c => c.BankAccountId);
+
+            modelBuilder.Entity<BankAccount>()
+            .HasMany(x => x.SentTransactions)
+            .WithOne(x => x.Sender)
+            .HasForeignKey(x => x.SenderBankAccId);
+
+            modelBuilder.Entity<BankAccount>()
+            .HasMany(x => x.ReceivedTransactions)
+            .WithOne(x => x.Receiver)
+            .HasForeignKey(x => x.ReceiverBankAccId);
+            
         }
 
     }

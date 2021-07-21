@@ -20,13 +20,13 @@ namespace SimpleBankingSystem.Data.Models
         public DateTime Date { get; set; }
 
         [Required]
-        public string SenderId { get; set; }
+        public string SenderBankAccId { get; set; }
 
-        public ApplicationUser Sender { get; set; }
+        public BankAccount Sender { get; set; }
 
-        public string ReceiverId { get; set; }
+        public string ReceiverBankAccId { get; set; }
 
-        public ApplicationUser Receiver { get; set; }
+        public BankAccount Receiver { get; set; }
 
     }
 }

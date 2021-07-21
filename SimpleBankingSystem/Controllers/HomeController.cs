@@ -67,8 +67,8 @@ namespace SimpleBankingSystem.Controllers
                             Ammount = model.Ammount,
                             Date = DateTime.UtcNow,
                             Description = model.Description,
-                            SenderId = user.Id,
-                            ReceiverId = receiver.Id
+                            SenderBankAccId = user.BankAccount.Id,
+                            ReceiverBankAccId = receiver.BankAccount.Id,
                         };
 
                         this._context.Transactions.Add(transaction);
@@ -125,8 +125,7 @@ namespace SimpleBankingSystem.Controllers
 
             var activeCards = user.BankAccount.Cards.Where(x => x.IsBlocked == false).ToList().Count();
 
-            var monthlyEarnings = user.BankAccount.Transactions
-                .Where(x => x.ReceiverId == user.Id)
+            var monthlyEarnings = user.BankAccount.ReceivedTransactions
                 .Where(x => DateTime.Compare(x.Date, DateTime.UtcNow) <= 0
                  && DateTime.Compare(x.Date, new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1)) >= 0)
                 .Select(x => x.Ammount)
