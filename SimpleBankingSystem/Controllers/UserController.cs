@@ -21,9 +21,9 @@ namespace SimpleBankingSystem.Controllers
                                       SignInManager<ApplicationUser> signInManager,
                                       IErrorCollector collector)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _collector = collector;
+            this._userManager = userManager;
+            this._signInManager = signInManager;
+            this._collector = collector;
         }
 
         [AllowAnonymous]
