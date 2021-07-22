@@ -56,7 +56,8 @@ namespace SimpleBankingSystem.Controllers
                     .Where(x => x.BankAccount.Iban == model.ReceiverIban)
                     .FirstOrDefault();
 
-                    if (receiver != null)
+                    if (receiver != null 
+                        && user.BankAccount.Iban!=receiver.BankAccount.Iban)
                     {
                         user.BankAccount.Balance -= model.Ammount;
 
@@ -86,7 +87,7 @@ namespace SimpleBankingSystem.Controllers
                         return this.View(modelToPass);
                     }
 
-                    this.ModelState.AddModelError(string.Empty, "IBAN not recognized");
+                    this.ModelState.AddModelError(string.Empty, "IBAN is incorrect");
                 }
 
                 else

@@ -1,10 +1,11 @@
-﻿@model IndexDashboardViewModel
+﻿@model TransactionAllViewModel
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Dashboard - Brand</title>
+    <title>Table - Brand</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
     <link rel="stylesheet" href="/fonts/fontawesome-all.min.css">
@@ -27,8 +28,8 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link active" href="/home/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="/transaction/all"><i class="fa fa-line-chart"></i><span>Transactions</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/home/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="transactions.html"><i class="fa fa-line-chart"></i><span>Transactions</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="cards.html"><i class="fa fa-credit-card-alt"></i><span>Cards</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="news.html"><i class="fa fa-newspaper-o"></i><span>News</span></a></li>
@@ -70,73 +71,81 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
-                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0">Dashboard</h3><a class="btn btn-primary btn-sm d-none d-sm-inline-block" role="button" href="#"><i class="fas fa-download fa-sm text-white-50"></i>&nbsp;Generate Report</a>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-xl-3 mb-4">
-                            <div class="card shadow border-left-primary py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col mr-2">
-                                            <div class="text-uppercase text-primary font-weight-bold text-xs mb-1"><span>Earnings (monthly)</span></div>
-                                            <div class="text-dark font-weight-bold h5 mb-0"><span>$@Model.MontlyEarnings</span></div>
+                    <h3 class="text-dark mb-4">Transactions</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">Your transactions:</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                    <div class="col-md-6 text-nowrap">
+                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                            <form id="form01" action="/transaction/all" method="get">
+                                                <label>
+                                                    Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
+                                                        <option value="today" selected="">today</option>
+                                                        <option value="7days">last 7 days</option>
+                                                        <option value="30days">last 30 days</option>
+                                                        <option value="all">all</option>
+                                                    </select>&nbsp;
+                                                </label>
+                                            </form>
                                         </div>
-                                        <div class="col-auto"><i class="fas fa-calendar fa-2x text-gray-300"></i></div>
                                     </div>
-                                </div>
+                                    <div class="col-md-6">
+                                        <div class="text-md-right dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" form="form01" type="submit" value="Submit">Refresh</button></div>
+                                    </div>
+                                
+                            </div>
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Ammount</th>
+                                            <th>Date</th>
+                                            <th>Id</th>
+                                            <th>Description</th>
+                                            <th>From/To</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa fa-plus" style="font-size: 28px;"></i></td>
+                                            <td>18.55$</td>
+                                            <td>07/06/2021</td>
+                                            <td>ib7778ghdhgj8</td>
+                                            <td>Returning money</td>
+                                            <td>I.Kolev</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa fa-minus" style="font-size: 28px;"></i></td>
+                                            <td>23.79$</td>
+                                            <td>03/06/2021</td>
+                                            <td>kn8988sdghcdf</td>
+                                            <td>Funds transfer</td>
+                                            <td>H.Ivanov</td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><strong>Type</strong></td>
+                                            <td><strong>Ammount</strong></td>
+                                            <td><strong>Date</strong></td>
+                                            <td><strong>Id</strong></td>
+                                            <td><strong>Description</strong></td>
+                                            <td><strong>From/To</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
                             </div>
                         </div>
-                        <div class="col-md-6 col-xl-3 mb-4">
-                            <div class="card shadow border-left-success py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col mr-2">
-                                            <div class="text-uppercase text-success font-weight-bold text-xs mb-1"><span>Balance</span></div>
-                                            <div class="text-dark font-weight-bold h5 mb-0"><span style="color: rgb(90, 92, 105);">$@Model.Balanace</span></div>
-                                        </div>
-                                        <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-xl-3 mb-4">
-                            <div class="card shadow border-left-warning py-2">
-                                <div class="card-body">
-                                    <div class="row align-items-center no-gutters">
-                                        <div class="col mr-2">
-                                            <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span>AcTIVE CARDS</span></div>
-                                            <div class="text-dark font-weight-bold h5 mb-0"><a style="color: rgb(90,92,105);" href="cards.html">@Model.ActiveCards</a></div>
-                                        </div>
-                                        <div class="col-auto"><i class="fas fa-credit-card fa-2x text-gray-300"></i></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <p style="margin-bottom: 0px;">Your IBAN is : @Model.Iban</p>
-                    <div class="d-sm-flex justify-content-between align-items-center mb-4">
-                        <h3 class="text-dark mb-0" style="font-size: 22px;margin-top: 29px;">Transfer funds:</h3>
-                    </div>
-                    @{ Html.RenderPartial("_SuccessErrorPartial", Model.SuccessOrError); }
-                    <div>
-                        <form action="/home/index" method="post" id="form1">
-                        <label style="margin-bottom: 6px;">Receiver Name:</label>
-                        <input class="form-control" type="text" name="receiverName" placeholder="John Doe">
-                        <label style="margin-bottom: 6px;padding-top: 6px;">Receiver IBAN:</label>
-                        <input class="form-control" type="text" name="receiverIban" placeholder="Enter IBAN here...">
-                        <label style="margin-bottom: 6px;padding-top: 6px;">Description:</label>
-                        <input class="form-control" type="text" name="description" placeholder="Your description">
-                        <label style="margin-bottom: 6px;padding-top: 6px;">Ammount:</label>
-                        <input class="form-control" type="number" min="0" step=".01" name="ammount" placeholder="100.00">
-                        <button class="btn btn-primary" type="submit" form="form1" value="Submit" style="margin-top: 20px;width: 128.7031px;">Send</button>
-                        </form>
                     </div>
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © SBS @DateTime.Now.Year</span></div>
+                    <div class="text-center my-auto copyright"><span>Copyright © SBS @DateTime.UtcNow.Year</span></div>
                 </div>
             </footer>
         </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
