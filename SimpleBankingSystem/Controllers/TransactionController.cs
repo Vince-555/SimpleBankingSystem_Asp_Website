@@ -94,7 +94,7 @@ namespace SimpleBankingSystem.Controllers
                 {"today",String.Empty},
                 {"7days",String.Empty},
                 {"30days",String.Empty},
-                {"All",String.Empty}
+                {"all",String.Empty}
             };
 
             if (period != null)

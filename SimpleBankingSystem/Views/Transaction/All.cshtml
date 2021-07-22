@@ -83,10 +83,10 @@
                                             <form id="form01" action="/transaction/all" method="get">
                                                 <label>
                                                     Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
-                                                        <option value="today" selected="">today</option>
-                                                        <option value="7days">last 7 days</option>
-                                                        <option value="30days">last 30 days</option>
-                                                        <option value="all">all</option>
+                                                        <!option value="today" @Model.selectedPeriodReturnForView["today"] > today</!option>
+                                                        <!option value="7days" @Model.selectedPeriodReturnForView["7days"] > last 7 days</!option>
+                                                        <!option value="30days" @Model.selectedPeriodReturnForView["30days"]> last 30 days</!option>
+                                                        <!option value="all" @Model.selectedPeriodReturnForView["all"]>all</!option>
                                                     </select>&nbsp;
                                                 </label>
                                             </form>
