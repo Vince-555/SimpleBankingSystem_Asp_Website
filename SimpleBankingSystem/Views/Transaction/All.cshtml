@@ -29,7 +29,7 @@
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
                     <li class="nav-item"><a class="nav-link" href="/home/index"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="transactions.html"><i class="fa fa-line-chart"></i><span>Transactions</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/transaction/all"><i class="fa fa-line-chart"></i><span>Transactions</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="cards.html"><i class="fa fa-credit-card-alt"></i><span>Cards</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="profile.html"><i class="fas fa-user"></i><span>Profile</span></a></li>
                     <li class="nav-item"><a class="nav-link" href="news.html"><i class="fa fa-newspaper-o"></i><span>News</span></a></li>
@@ -83,10 +83,11 @@
                                             <form id="form01" action="/transaction/all" method="get">
                                                 <label>
                                                     Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
+                                                        <!option value="all" @Model.selectedPeriodReturnForView["all"]>all</!option>
                                                         <!option value="today" @Model.selectedPeriodReturnForView["today"] > today</!option>
                                                         <!option value="7days" @Model.selectedPeriodReturnForView["7days"] > last 7 days</!option>
                                                         <!option value="30days" @Model.selectedPeriodReturnForView["30days"]> last 30 days</!option>
-                                                        <!option value="all" @Model.selectedPeriodReturnForView["all"]>all</!option>
+                                                        
                                                     </select>&nbsp;
                                                 </label>
                                             </form>
@@ -106,26 +107,38 @@
                                             <th>Date</th>
                                             <th>Id</th>
                                             <th>Description</th>
-                                            <th>From/To</th>
+                                            <th>From</th>
+                                            <th>To</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td><i class="fa fa-plus" style="font-size: 28px;"></i></td>
-                                            <td>18.55$</td>
-                                            <td>07/06/2021</td>
-                                            <td>ib7778ghdhgj8</td>
-                                            <td>Returning money</td>
-                                            <td>I.Kolev</td>
-                                        </tr>
-                                        <tr>
-                                            <td><i class="fa fa-minus" style="font-size: 28px;"></i></td>
-                                            <td>23.79$</td>
-                                            <td>03/06/2021</td>
-                                            <td>kn8988sdghcdf</td>
-                                            <td>Funds transfer</td>
-                                            <td>H.Ivanov</td>
-                                        </tr>
+                                        @foreach (var item in this.Model.Transactions)
+                                        {
+                                            string icon = String.Empty;
+                                            if (item.Type == "In")
+                                            {
+                                                icon = "<i class=\"fa fa-plus\" style=\"font - size: 28px; \"></i>";
+                                            }
+
+                                            else
+                                            {
+                                                icon = "<i class=\"fa fa-minus\" style=\"font - size: 28px; \"></i>";
+                                            }
+
+                                            <tr>
+                                                <td>@Html.Raw(icon)</td>
+                                                <td>@item.Ammount<text>$</text></td>
+                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.TransactionId</td>
+                                                <td>@item.Description</td>
+                                                <td>@item.From</td>
+                                                <td>@item.To</td>
+
+
+                                            </tr>
+                                        }
+                                        
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -134,7 +147,9 @@
                                             <td><strong>Date</strong></td>
                                             <td><strong>Id</strong></td>
                                             <td><strong>Description</strong></td>
-                                            <td><strong>From/To</strong></td>
+                                            <td><strong>From</strong></td>
+                                            <td><strong>To</strong></td>
+
                                         </tr>
                                     </tfoot>
                                 </table>
