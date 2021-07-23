@@ -60,7 +60,7 @@ namespace SimpleBankingSystem.Controllers
                     Description = x.Description.Length > 20 ? x.Description.Substring(0, 20) + "..." : x.Description,
                     Ammount = x.Ammount.ToString("G", CultureInfo.InvariantCulture),
                     TransactionId = x.Id.ToUpper(),
-                    To = x.Sender.User.FirstName + " " + x.Sender.User.LastName,
+                    To = x.Receiver.User.FirstName + " " + x.Receiver.User.LastName,
                     From = "Your account"
 
                 }).ToList();
@@ -72,7 +72,8 @@ namespace SimpleBankingSystem.Controllers
             switch (period)
             {
                 case "today":
-                    receivedDateTimePeriod = DateTime.UtcNow;
+                    receivedDateTimePeriod = new DateTime(DateTime.UtcNow.Year,
+                        DateTime.UtcNow.Month,DateTime.UtcNow.Day,0,0,1);
                     break;
                 case "7days":
                     receivedDateTimePeriod = DateTime.UtcNow.AddDays(-7d);

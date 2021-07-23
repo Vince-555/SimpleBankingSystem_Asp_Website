@@ -59,22 +59,33 @@ namespace SimpleBankingSystem.Controllers
                     if (receiver != null 
                         && user.BankAccount.Iban!=receiver.BankAccount.Iban)
                     {
-                        user.BankAccount.Balance -= model.Ammount;
-
-                        receiver.BankAccount.Balance += model.Ammount;
-
-                        var transaction = new Transaction
+                        using var transactionDb = this._context.Database.BeginTransaction();
+                        try
                         {
-                            Ammount = model.Ammount,
-                            Date = DateTime.UtcNow,
-                            Description = model.Description,
-                            SenderBankAccId = user.BankAccount.Id,
-                            ReceiverBankAccId = receiver.BankAccount.Id,
-                        };
+                            user.BankAccount.Balance -= model.Ammount;
 
-                        this._context.Transactions.Add(transaction);
+                            receiver.BankAccount.Balance += model.Ammount;
 
-                        this._context.SaveChanges();
+                            var transaction = new Transaction
+                            {
+                                Ammount = model.Ammount,
+                                Date = DateTime.UtcNow,
+                                Description = model.Description,
+                                SenderBankAccId = user.BankAccount.Id,
+                                ReceiverBankAccId = receiver.BankAccount.Id,
+                            };
+
+                            this._context.Transactions.Add(transaction);
+
+                            this._context.SaveChanges();
+
+                            transactionDb.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transactionDb.Rollback();
+                            return null; //return 404 page when available
+                        }
 
                         modelToPass.Balanace -= model.Ammount;
 
