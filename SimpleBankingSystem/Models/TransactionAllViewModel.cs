@@ -7,11 +7,7 @@ namespace SimpleBankingSystem.Models
 {
     public class TransactionAllViewModel
     {
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
-
-        public string PhotoUrl { get; set; }
+        public UserNavbarViewModel UserNavbarModel { get; set; }
 
         public ICollection<TransactionModel> Transactions { get; set; }
 

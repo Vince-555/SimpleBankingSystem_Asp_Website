@@ -105,9 +105,12 @@ namespace SimpleBankingSystem.Controllers
 
             var transactionAllModel = new TransactionAllViewModel
             {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                PhotoUrl = user.PhotoUrl,
+                UserNavbarModel = new UserNavbarViewModel
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhotoUrl = user.PhotoUrl,
+                },                
                 Transactions = selectedTransactions,
                 selectedPeriodReturnForView = selectedPeriodReturn
             };

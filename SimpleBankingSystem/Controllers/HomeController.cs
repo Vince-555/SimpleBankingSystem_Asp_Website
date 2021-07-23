@@ -147,9 +147,12 @@ namespace SimpleBankingSystem.Controllers
 
             var model = new IndexDashboardViewModel
             {
-                FirstName = firstName,
-                LastName = lastName,
-                PhotoUrl = photoUrl,
+                UserNavbarModel = new UserNavbarViewModel
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    PhotoUrl = photoUrl,
+                },
                 Balanace = balance,
                 ActiveCards = activeCards,
                 MontlyEarnings = monthlyEarnings,

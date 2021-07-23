@@ -9,6 +9,6 @@ namespace SimpleBankingSystem.Models
     {
         public bool IsError { get; set; }
 
-        public IEnumerable<string> AllMessages { get; set; }
+        public ICollection<string> AllMessages { get; set; }
     }
 }
