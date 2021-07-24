@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
@@ -13,7 +14,7 @@ namespace SimpleBankingSystem.Data.Models
         [MaxLength(AddressMaxLength)]
         public string StreetAddress { get; set; }
 
-        [MaxLength(GeneralInputFieldMaxLenght)]
+        [MaxLength(GeneralInputFieldMaxLenght)] 
         public string City { get; set; }
 
         [MaxLength(GeneralInputFieldMaxLenght)]
@@ -22,6 +23,7 @@ namespace SimpleBankingSystem.Data.Models
         [Required]
         public string UserId { get; set; }
 
+        [InverseProperty("Address")]
         public ApplicationUser User { get; set; }
     }
 }

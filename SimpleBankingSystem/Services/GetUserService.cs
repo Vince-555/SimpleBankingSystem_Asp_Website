@@ -14,6 +14,7 @@ namespace SimpleBankingSystem.Services
         {
             return manager.Users
                 .Where(x => x.UserName == userName)
+                .Include(x=>x.Address)
                 .Include(x => x.BankAccount)
                 .ThenInclude(x => x.SentTransactions)
                 .ThenInclude(x=>x.Receiver)

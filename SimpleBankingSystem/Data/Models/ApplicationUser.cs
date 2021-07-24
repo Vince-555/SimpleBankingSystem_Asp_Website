@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
@@ -24,10 +25,7 @@ namespace SimpleBankingSystem.Data.Models
 
         public string AddressId { get; set; }
 
-        public Address Address { get; set; }
-
-
-
-
+        [InverseProperty("User")]
+        public Address Address { get; set; } 
     }
 }
