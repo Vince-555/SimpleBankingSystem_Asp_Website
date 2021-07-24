@@ -28,7 +28,7 @@ namespace SimpleBankingSystem.Controllers
             this._getUserService = getUserService;
         }
 
-        public IActionResult AllCards()
+        public IActionResult AllCards(int block, int unblock, int remove)
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
@@ -37,6 +37,51 @@ namespace SimpleBankingSystem.Controllers
                 IsError = false,
                 AllMessages = new List<string>(),
             };
+
+            if(block!=0)
+            {
+                var card = user.BankAccount.Cards
+                    .Where(x => x.Id == block)
+                    .FirstOrDefault();
+
+                if (card==null || card.IsBlocked)
+                {
+                    return null; //404 when page is available
+                }
+
+                card.IsBlocked = true;
+                this._context.SaveChanges();
+            }
+
+            if (unblock != 0)
+            {
+                var card = user.BankAccount.Cards
+                    .Where(x => x.Id == unblock)
+                    .FirstOrDefault();
+
+                if (card == null || !card.IsBlocked)
+                {
+                    return null; //404 when page is available
+                }
+
+                card.IsBlocked = false;
+                this._context.SaveChanges();
+            }
+
+            if (remove != 0)
+            {
+                var card = user.BankAccount.Cards
+                    .Where(x => x.Id == remove)
+                    .FirstOrDefault();
+
+                if (card == null)
+                {
+                    return null; //404 when page is available
+                }
+
+                this._context.Remove(card);
+                this._context.SaveChanges();
+            }
 
             var allCardsModel = this.AllCardsViewModelFiller(successOrError);
 
@@ -99,7 +144,8 @@ namespace SimpleBankingSystem.Controllers
 
         private AllCardsViewModel AllCardsViewModelFiller (SuccessOrErrorMessageForPartialViewModel successOrError)
         {
-            var userValidCards = this._getUserService.GetUser(this._userManager, this.User.Identity.Name)
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
+            var userValidCards = user
                 .BankAccount
                 .Cards
                 .Where(x => DateTime.Compare(DateTime.UtcNow, x.ExpDate) <= 0)
@@ -114,6 +160,12 @@ namespace SimpleBankingSystem.Controllers
            
             var model = new AllCardsViewModel()
             {
+                UserNavBarModel = new UserNavbarViewModel()
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    PhotoUrl = user.PhotoUrl,
+                },
                 SuccessOrError = successOrError,
                 AllCards = userValidCards
             };

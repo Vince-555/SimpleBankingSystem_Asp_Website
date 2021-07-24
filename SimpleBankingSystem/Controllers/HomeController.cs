@@ -135,7 +135,11 @@ namespace SimpleBankingSystem.Controllers
 
             var balance = user.BankAccount.Balance;
 
-            var activeCards = user.BankAccount.Cards.Where(x => x.IsBlocked == false).ToList().Count();
+            var activeCards = user.BankAccount.Cards
+                .Where(x => x.IsBlocked == false)
+                .Where(x => DateTime.Compare(DateTime.UtcNow, x.ExpDate) <= 0)
+                .ToList()
+                .Count();
 
             var monthlyEarnings = user.BankAccount.ReceivedTransactions
                 .Where(x => DateTime.Compare(x.Date, DateTime.UtcNow) <= 0
