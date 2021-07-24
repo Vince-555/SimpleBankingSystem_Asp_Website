@@ -34,7 +34,7 @@ namespace SimpleBankingSystem.Controllers
 
             if (!periodAcceptedValues.Contains(period) && period!=null)
             {
-                return null; //redirect to 404 page when available
+                return this.View("404");
             }
 
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
@@ -88,6 +88,7 @@ namespace SimpleBankingSystem.Controllers
 
             var selectedTransactions = userTransactionsCombined
                 .Where(x => DateTime.Compare(x.Date, receivedDateTimePeriod) >= 0)
+                .OrderByDescending(x=>x.Date)
                 .ToList();
 
             Dictionary<string, string> selectedPeriodReturn = new Dictionary<string, string>

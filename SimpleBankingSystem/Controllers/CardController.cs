@@ -46,7 +46,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card==null || card.IsBlocked)
                 {
-                    return null; //404 when page is available
+                    return this.View("404");
                 }
 
                 card.IsBlocked = true;
@@ -61,7 +61,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card == null || !card.IsBlocked)
                 {
-                    return null; //404 when page is available
+                    return this.View("404");
                 }
 
                 card.IsBlocked = false;
@@ -76,7 +76,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card == null)
                 {
-                    return null; //404 when page is available
+                    return this.View("404");
                 }
 
                 this._context.Remove(card);
@@ -102,7 +102,7 @@ namespace SimpleBankingSystem.Controllers
 
             if (card!= "visa" && card!="mastercard")
             {
-                return null; //return 404 when page is available
+                return this.View("404");
             }
 
             if (cardName.Length > GeneralInputFieldMaxLenght)

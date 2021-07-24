@@ -70,7 +70,7 @@ namespace SimpleBankingSystem.Controllers
                             {
                                 Ammount = model.Ammount,
                                 Date = DateTime.UtcNow,
-                                Description = model.Description,
+                                Description = model.Description??"No description",
                                 SenderBankAccId = user.BankAccount.Id,
                                 ReceiverBankAccId = receiver.BankAccount.Id,
                             };
@@ -84,7 +84,7 @@ namespace SimpleBankingSystem.Controllers
                         catch (Exception ex)
                         {
                             transactionDb.Rollback();
-                            return null; //return 404 page when available
+                            return this.View("404");
                         }
 
                         modelToPass.Balanace -= model.Ammount;
