@@ -31,12 +31,12 @@ namespace SimpleBankingSystem.Controllers
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
            
-            var address = this._context.Addresses.Where(x => x.UserId == user.Id).FirstOrDefault();
+            var address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
             //ef fails to load address otherwise even though include is used???
 
             if(address==null)
             {
-                var newAddress = new Address()
+                var newAddress = new UserAddress()
                 {
                     StreetAddress = String.Empty,
                     City = String.Empty,
@@ -44,11 +44,11 @@ namespace SimpleBankingSystem.Controllers
                     UserId = user.Id,
                 };
 
-                this._context.Addresses.Add(newAddress);
+                this._context.UserAddresses.Add(newAddress);
 
                 this._context.SaveChanges();
 
-                address = this._context.Addresses.Where(x => x.UserId == user.Id).FirstOrDefault();
+                address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
             }
 
             var profileModel = new ProfileViewModel()

@@ -5,7 +5,7 @@ using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Data.Models
 {
-    public class Address
+    public class UserAddress
     {
         [Required]
         [Key]
@@ -21,6 +21,7 @@ namespace SimpleBankingSystem.Data.Models
         public string Country { get; set; }
 
         [Required]
+        [ForeignKey("User")]
         public string UserId { get; set; }
 
         [InverseProperty("Address")]

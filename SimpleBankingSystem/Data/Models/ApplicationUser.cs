@@ -26,6 +26,6 @@ namespace SimpleBankingSystem.Data.Models
         public string AddressId { get; set; }
 
         [InverseProperty("User")]
-        public Address Address { get; set; } 
+        public UserAddress Address { get; set; } 
     }
 }

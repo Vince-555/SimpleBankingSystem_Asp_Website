@@ -14,7 +14,7 @@ namespace SimpleBankingSystem.Data
         {
         }
         
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<UserAddress> UserAddresses { get; set; }
 
         public DbSet<BankAccount> BankAccounts { get; set; }
 
@@ -32,9 +32,9 @@ namespace SimpleBankingSystem.Data
             modelBuilder.Entity<ApplicationUser>()
             .HasOne(a => a.Address)
             .WithOne(a => a.User)
-            .HasForeignKey<Address>(c => c.UserId);
+            .HasForeignKey<UserAddress>(c => c.UserId);
 
-            modelBuilder.Entity<Address>()
+            modelBuilder.Entity<UserAddress>()
             .HasOne(x => x.User)
             .WithOne(x => x.Address)
             .HasForeignKey<ApplicationUser>(x => x.AddressId);

@@ -154,32 +154,6 @@ namespace SimpleBankingSystem.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SimpleBankingSystem.Data.Models.Address", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("City")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("Country")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("StreetAddress")
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
-
             modelBuilder.Entity("SimpleBankingSystem.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -380,6 +354,32 @@ namespace SimpleBankingSystem.Data.Migrations
                     b.ToTable("Transactions");
                 });
 
+            modelBuilder.Entity("SimpleBankingSystem.Data.Models.UserAddress", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("City")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Country")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("StreetAddress")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserAddresses");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -433,7 +433,7 @@ namespace SimpleBankingSystem.Data.Migrations
 
             modelBuilder.Entity("SimpleBankingSystem.Data.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("SimpleBankingSystem.Data.Models.Address", "Address")
+                    b.HasOne("SimpleBankingSystem.Data.Models.UserAddress", "Address")
                         .WithOne("User")
                         .HasForeignKey("SimpleBankingSystem.Data.Models.ApplicationUser", "AddressId");
 
@@ -474,11 +474,6 @@ namespace SimpleBankingSystem.Data.Migrations
                     b.Navigation("Sender");
                 });
 
-            modelBuilder.Entity("SimpleBankingSystem.Data.Models.Address", b =>
-                {
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("SimpleBankingSystem.Data.Models.BankAccount", b =>
                 {
                     b.Navigation("Cards");
@@ -487,6 +482,11 @@ namespace SimpleBankingSystem.Data.Migrations
 
                     b.Navigation("SentTransactions");
 
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SimpleBankingSystem.Data.Models.UserAddress", b =>
+                {
                     b.Navigation("User");
                 });
 #pragma warning restore 612, 618
