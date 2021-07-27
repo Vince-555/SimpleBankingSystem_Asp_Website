@@ -84,89 +84,68 @@
                                 </div>
                             </div>
                             <div class="card shadow mb-4">
-                                <form style="padding-right: 20px;padding-left: 20px;">
-                                    <p class="text-primary m-0 font-weight-bold" style="padding-top: 11px;">Change Password</p><label style="padding-top: 8px;margin-bottom: 1px;">Enter current password:</label><input class="form-control" type="password"><label style="padding-top: 8px;margin-bottom: 1px;">Enter new password:</label><input class="form-control" type="password"><label style="margin-bottom: 1px;padding-top: 8px;">Repeat new password:</label><input class="form-control" type="password"><button class="btn btn-primary" type="button" style="margin-top: 10px;margin-bottom: 10px;margin-right: 0px;margin-left: 16px;height: 36px;">Change Password</button>
+                                <form action="/profile/changepassword" method="post" style="padding-right: 20px;padding-left: 20px;">
+                                    <p class="text-primary m-0 font-weight-bold" style="padding-top: 11px;">Change Password</p>
+                                    <label style="padding-top: 8px;margin-bottom: 1px;" name="currentPassword">Enter current password:</label>
+                                    <input class="form-control" type="password" name="currentPassword">
+                                    <label style="padding-top: 8px;margin-bottom: 1px;">Enter new password:</label>
+                                    <input class="form-control" type="password" name="newPassword">
+                                    <label style="margin-bottom: 1px;padding-top: 8px;">Repeat new password:</label>
+                                    <input class="form-control" type="password" name="repeatPassword">
+                                    <button class="btn btn-primary" type="submit" style="margin-top: 15px;margin-bottom: 35px;margin-right: 0px;margin-left: 16px;height: 36px;">Change Password</button>
                                 </form>
                             </div>
                         </div>
-                        <div class="col-lg-8">
-                            <div class="row mb-3 d-none">
-                                <div class="col">
-                                    <div class="card text-white bg-primary shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
+                        <div class="row">
+                            <div class="col">
+                                <div class="card shadow mb-3">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 font-weight-bold">User Settings</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/profile/changeusersettings" method="post">
+                                            <div class="form-row">
                                                 <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
+                                                    <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="@Model.Email" name="email"><p>You will be logged out after changing your email !!!</p></div>
                                                 </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
                                             </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                        </div>
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" id="firstName" placeholder="@Model.UserNavbarModel.FirstName" name="firstName"></div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" id="lastName" placeholder="@Model.UserNavbarModel.LastName" name="lastName"></div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="col">
-                                    <div class="card text-white bg-success shadow">
-                                        <div class="card-body">
-                                            <div class="row mb-2">
-                                                <div class="col">
-                                                    <p class="m-0">Peformance</p>
-                                                    <p class="m-0"><strong>65.2%</strong></p>
-                                                </div>
-                                                <div class="col-auto"><i class="fas fa-rocket fa-2x"></i></div>
+                                <div class="card shadow">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <form action="/profile/changeaddress" method="post">
+                                            <div class="form-group">
+                                            <label for="address"><strong>Address</strong></label>
+                                            <input class="form-control" type="text" id="address" placeholder="@Model.Address" name="address">
                                             </div>
-                                            <p class="text-white-50 small m-0"><i class="fas fa-arrow-up"></i>&nbsp;5% since last month</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <div class="card shadow mb-3">
-                                        <div class="card-header py-3">
-                                            <p class="text-primary m-0 font-weight-bold">User Settings</p>
-                                        </div>
-                                        <div class="card-body">
-                                            <form action="/profile/changeusersettings" method="post">
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-group"><label for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="@Model.Email" name="email"><p>You will be logged out after changing your email !!!</p></div>
-                                                    </div>
+                                            <div class="form-row">
+                                                <div class="col">
+                                                    <div class="form-group"><label for="city"><strong>City</strong></label><input class="form-control" type="text" id="city" placeholder="@Model.City" name="city"></div>
                                                 </div>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-group"><label for="first_name"><strong>First Name</strong></label><input class="form-control" type="text" id="firstName" placeholder="@Model.UserNavbarModel.FirstName" name="firstName"></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-group"><label for="last_name"><strong>Last Name</strong></label><input class="form-control" type="text" id="lastName" placeholder="@Model.UserNavbarModel.LastName" name="lastName"></div>
-                                                    </div>
+                                                <div class="col">
+                                                    <div class="form-group"><label for="country"><strong>Country</strong></label><input class="form-control" type="text" id="country" placeholder="@Model.Country" name="country"></div>
                                                 </div>
-                                                <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class="card shadow">
-                                        <div class="card-header py-3">
-                                            <p class="text-primary m-0 font-weight-bold">Contact Settings</p>
-                                        </div>
-                                        <div class="card-body">
-                                            <form>
-                                                <div class="form-group"><label for="address"><strong>Address</strong></label><input class="form-control" type="text" id="address" placeholder="@Model.Address" name="address"></div>
-                                                <div class="form-row">
-                                                    <div class="col">
-                                                        <div class="form-group"><label for="city"><strong>City</strong></label><input class="form-control" type="text" id="city" placeholder="@Model.City" name="city"></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="form-group"><label for="country"><strong>Country</strong></label><input class="form-control" type="text" id="country" placeholder="@Model.Country" name="country"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
-                                            </form>
-                                        </div>
+                                            </div>
+                                            <div class="form-group"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -175,8 +154,10 @@
                     <div class="text-center my-auto copyright"><span>Copyright © SBS @DateTime.UtcNow.Year</span></div>
                 </div>
             </footer>
-        </div><a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+        </div> 
     </div>
+    
+    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
     <script src="/js/jquery.min.js"></script>
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>

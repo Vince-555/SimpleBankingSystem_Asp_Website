@@ -159,6 +159,121 @@ namespace SimpleBankingSystem.Controllers
             return this.RedirectToAction("Profile");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        {
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
+
+            SuccessOrErrorMessageForPartialViewModel successOrError;
+
+            ProfileViewModel modelToPass;
+
+            if (this.ModelState.IsValid)
+            {
+                var result = await this._userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    await this._userManager.UpdateAsync(user);
+
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        AllMessages = new List<string>()
+                        {
+                            "Password successfully changed"
+                        }
+                    };
+                }
+
+                else
+                {
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        IsError = true,
+
+                        AllMessages = new List<string>()
+                        {
+                            "Incorrect current password"
+                        }
+                    };
+                }
+            }
+
+            else
+            {
+                successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                {
+                    IsError = true,
+                    AllMessages = this._collector.ErrorCollector(this.ModelState)
+                };
+            }
+
+            modelToPass = this.ProfileModelFiller();
+
+            modelToPass.SuccessOrError = successOrError;
+
+            return this.View("Profile", modelToPass);
+        }
+
+        public IActionResult ChangeAddress(ChangeAddressModel model)
+        {
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
+
+            SuccessOrErrorMessageForPartialViewModel successOrError;
+
+            ProfileViewModel modelToPass;
+
+            if(this.ModelState.IsValid)
+            {
+                if (ListOfAllCountries.Names.Contains(model.Country))
+                {
+                    user.Address.City = model.City;
+
+                    user.Address.StreetAddress = model.Address;
+
+                    user.Address.Country = model.Country;
+
+                    this._context.SaveChanges();
+
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        AllMessages = new List<string>()
+                        {
+                            "Address successfully updated"
+                        }
+                    };
+                }
+
+                else
+                {
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        IsError = true,
+                        AllMessages = new List<string>()
+                        {
+                            
+                            "Enter a correct country"
+                        },
+                    };
+                }
+            }
+
+            else
+            {
+                successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                {
+                    IsError = true,
+                    AllMessages = this._collector.ErrorCollector(this.ModelState)
+                };
+            }
+
+            modelToPass = this.ProfileModelFiller();
+
+            modelToPass.SuccessOrError = successOrError;
+
+            return this.View("Profile", modelToPass);
+        }
+
         private ProfileViewModel ProfileModelFiller()
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
