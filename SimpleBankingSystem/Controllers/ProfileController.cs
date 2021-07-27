@@ -17,24 +17,31 @@ namespace SimpleBankingSystem.Controllers
     {
         private readonly SBSDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IGetUserService _getUserService;
+        private readonly IErrorCollector _collector;
 
-        public ProfileController(SBSDbContext context, UserManager<ApplicationUser> userManager,
-            IGetUserService getUserService)
+        public ProfileController(SBSDbContext context,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signinManager,
+            IGetUserService getUserService,
+            IErrorCollector collector)
         {
             this._context = context;
             this._userManager = userManager;
             this._getUserService = getUserService;
+            this._collector = collector;
+            this._signInManager = signinManager;
         }
 
         public IActionResult Profile()
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
            
-            var address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
+           // var address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
             //ef fails to load address otherwise even though include is used???
 
-            if(address==null)
+            if(user.Address==null)
             {
                 var newAddress = new UserAddress()
                 {
@@ -42,14 +49,119 @@ namespace SimpleBankingSystem.Controllers
                     City = String.Empty,
                     Country = String.Empty,
                     UserId = user.Id,
+                    User = user,
                 };
 
                 this._context.UserAddresses.Add(newAddress);
 
                 this._context.SaveChanges();
 
-                address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
+                user.Address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
             }
+
+            var profileModel = this.ProfileModelFiller();
+            
+            return this.View(profileModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserSettings(ChangeUserSettingsModel model)
+        {
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
+
+            SuccessOrErrorMessageForPartialViewModel successOrError;
+
+            ProfileViewModel modelToPass;
+
+            int newSettings = 0;
+
+            if (this.ModelState.IsValid)
+            {
+                if (model.FirstName != null)
+                {
+                    user.FirstName = model.FirstName;
+
+                    newSettings++;
+                }
+
+                if (model.LastName != null)
+                {
+                    user.LastName = model.LastName;
+
+                    newSettings++;
+                }
+
+                if (model.Email != null)
+                {
+                    user.Email = model.Email;
+
+                    user.UserName = model.Email;
+
+                    await this._userManager.UpdateAsync(user);
+
+                    await _signInManager.SignOutAsync();
+
+                    return RedirectToAction("Login","User");
+                }
+
+                if (newSettings == 0)
+                {
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        IsError = true,
+                        AllMessages = new List<string>() { "No settings have been updated" }
+                    };
+                }
+
+                else
+                {
+                    await this._userManager.UpdateAsync(user);
+
+                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                    {
+                        AllMessages = new List<string>() { "User settings updated successfully" }
+                    };
+                }
+            }
+            else
+            {
+                successOrError = new SuccessOrErrorMessageForPartialViewModel()
+                {
+                    IsError = true,
+                    AllMessages = this._collector.ErrorCollector(this.ModelState)
+                };
+            }
+
+            modelToPass = this.ProfileModelFiller();
+
+            modelToPass.SuccessOrError = successOrError;
+
+            return this.View("Profile", modelToPass);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePhoto(string photoUrl)
+        {
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
+
+            Uri uriResult;
+
+            bool result = Uri.TryCreate(photoUrl, UriKind.Absolute, out uriResult)
+            && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+
+            if(result)
+            {
+                user.PhotoUrl = photoUrl;
+
+                await this._userManager.UpdateAsync(user);
+            }
+
+            return this.RedirectToAction("Profile");
+        }
+
+        private ProfileViewModel ProfileModelFiller()
+        {
+            var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
             var profileModel = new ProfileViewModel()
             {
@@ -59,14 +171,13 @@ namespace SimpleBankingSystem.Controllers
                     LastName = user.LastName,
                     PhotoUrl = user.PhotoUrl,
                 },
-                Address = address.StreetAddress,
-                City = address.City,
-                Country = address.Country,
+                Address = user.Address.StreetAddress,
+                City = user.Address.City,
+                Country = user.Address.Country,
                 Email = user.Email,
-                Username = user.UserName,
             };
 
-            return this.View(profileModel);
+            return profileModel;
         }
     }
 }

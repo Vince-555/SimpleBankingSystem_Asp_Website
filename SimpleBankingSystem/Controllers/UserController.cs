@@ -159,7 +159,7 @@ namespace SimpleBankingSystem.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Login","User");
         }
     }
 }

@@ -7,9 +7,9 @@ namespace SimpleBankingSystem.Models
 {
     public class ProfileViewModel
     {
-        public UserNavbarViewModel UserNavbarModel { get; set; }
+        public SuccessOrErrorMessageForPartialViewModel SuccessOrError { get; set; }
 
-        public string Username { get; set; }
+        public UserNavbarViewModel UserNavbarModel { get; set; }
 
         public string Email { get; set; }
 
