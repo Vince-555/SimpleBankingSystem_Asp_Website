@@ -215,6 +215,7 @@ namespace SimpleBankingSystem.Controllers
             return this.View("Profile", modelToPass);
         }
 
+        [HttpPost]
         public IActionResult ChangeAddress(ChangeAddressModel model)
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);

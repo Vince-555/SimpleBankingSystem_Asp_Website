@@ -20,5 +20,7 @@ namespace SimpleBankingSystem.Data.Models
 
         public DateTime Date { get; set; }
 
+        public string PhotoUrl { get; set; }
+
     }
 }

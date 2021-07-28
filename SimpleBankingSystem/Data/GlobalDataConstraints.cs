@@ -37,6 +37,8 @@
 
         public const int CityMinLength = 2;
 
+        public const int NewsMaxShortenedViewLength = 250;
+
 
     }
 }
