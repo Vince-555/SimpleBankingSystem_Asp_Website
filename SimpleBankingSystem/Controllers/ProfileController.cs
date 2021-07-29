@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "user")]
     public class ProfileController:Controller
     {
         private readonly SBSDbContext _context;

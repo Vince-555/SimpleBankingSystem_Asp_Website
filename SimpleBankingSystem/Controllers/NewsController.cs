@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBankingSystem.Data;
 using SimpleBankingSystem.Data.Models;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Controllers
 {
+    [Authorize(Roles = "user")]
     public class NewsController :Controller
     {
         private readonly SBSDbContext _context;

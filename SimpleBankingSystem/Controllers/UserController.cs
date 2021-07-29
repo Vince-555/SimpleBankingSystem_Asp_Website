@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using SimpleBankingSystem.Data;
 using SimpleBankingSystem.Data.Models;
 using SimpleBankingSystem.Models;
 using SimpleBankingSystem.Services;
@@ -13,17 +15,20 @@ namespace SimpleBankingSystem.Controllers
 {
     public class UserController :Controller
     {
+        private readonly SBSDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IErrorCollector _collector;
 
         public UserController(UserManager<ApplicationUser> userManager,
                                       SignInManager<ApplicationUser> signInManager,
+                                      SBSDbContext context,
                                       IErrorCollector collector)
         {
             this._userManager = userManager;
             this._signInManager = signInManager;
             this._collector = collector;
+            this._context = context;
         }
 
         [AllowAnonymous]
@@ -31,6 +36,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if(this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 
@@ -43,6 +53,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                   return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 
@@ -54,6 +69,11 @@ namespace SimpleBankingSystem.Controllers
 
                 if (result.Succeeded)
                 {
+                    if (this.User.IsInRole("admin"))
+                    {
+                        return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    }
+
                     return RedirectToAction("Index", "Home");
                 }
 
@@ -72,6 +92,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 
@@ -84,6 +109,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 
@@ -106,7 +136,9 @@ namespace SimpleBankingSystem.Controllers
 
                 if (result.Succeeded)
                 {
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    await this._userManager.AddToRoleAsync(user, "user");
+
+                    await _context.SaveChangesAsync();
 
                     return RedirectToAction("Login", "User");
                 }
@@ -130,6 +162,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 
@@ -142,6 +179,11 @@ namespace SimpleBankingSystem.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
+                if (this.User.IsInRole("admin"))
+                {
+                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                }
+
                 return this.Redirect("/home/index");
             }
 

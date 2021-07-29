@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Controllers
@@ -34,12 +35,18 @@ namespace SimpleBankingSystem.Controllers
         [Authorize]
         public IActionResult Index()
         {
+        
+            if (this.User.IsInRole("admin"))
+            {
+                return this.RedirectToAction("transactionsreview", "AdminDash");
+            }
+
             var model = this.IndexDashboardViewModelFiller();
 
             return this.View(model);
         }
 
-        [Authorize]
+        [Authorize(Roles = "user")]
         [HttpPost]
         public IActionResult Index(IndexDashboardPostModel model)
         {

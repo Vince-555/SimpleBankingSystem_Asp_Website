@@ -13,7 +13,7 @@ using static SimpleBankingSystem.Data.GlobalDataConstraints;
 
 namespace SimpleBankingSystem.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "user")]
     public class CardController:Controller
     {
         private readonly SBSDbContext _context;

@@ -37,7 +37,12 @@ namespace SimpleBankingSystem
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
                 })
+
+                .AddRoles<IdentityRole>()
+
                 .AddEntityFrameworkStores<SBSDbContext>()
+
+                .AddDefaultTokenProviders()
 
                 .AddErrorDescriber<AppErrorDescriber>();
 

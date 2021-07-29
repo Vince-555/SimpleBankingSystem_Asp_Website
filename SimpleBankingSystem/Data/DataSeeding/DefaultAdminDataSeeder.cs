@@ -10,11 +10,16 @@ namespace SimpleBankingSystem.Data.DataSeeding
 {
     public class DefaultAdminDataSeeder
     {
-        private SBSDbContext _context;
+        private readonly SBSDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public DefaultAdminDataSeeder(SBSDbContext context)
+        public DefaultAdminDataSeeder(SBSDbContext context, UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            _context = context;
+            this._context = context;
+            this._userManager = userManager;
+            this._roleManager = roleManager;
         }
 
         public async Task SeedAdmin()
@@ -25,7 +30,7 @@ namespace SimpleBankingSystem.Data.DataSeeding
                 EmailConfirmed = true,
                 FirstName = "User",
                 LastName = "Administrator",
-                Id = "1", //pontential issues
+                Id = Guid.NewGuid().ToString(),
                 LockoutEnabled = false,
                 NormalizedEmail = "ADMIN@SBS.COM",
                 UserName = "admin@sbs.com",
@@ -41,18 +46,19 @@ namespace SimpleBankingSystem.Data.DataSeeding
 
             if (!_context.Users.Any(x => x.UserName == user.UserName))
             {
-                var password = new PasswordHasher<ApplicationUser>();
-                var hashed = password.HashPassword(user, "admin1234");
-                user.PasswordHash = hashed;
-                var userStore = new UserStore<ApplicationUser>(_context);
-                await userStore.CreateAsync(user);
+               await this._userManager.CreateAsync(user, "admin1234");
             }
 
             if (!_context.Roles.Any(x => x.Name == "admin"))
             {
-                await roleStore.CreateAsync(new IdentityRole { Name = "admin", NormalizedName = "ADMIN" });
-                var userStore = new UserStore<ApplicationUser>(_context);
-                await userStore.AddToRoleAsync(user, "admin");
+                await this._roleManager.CreateAsync(new IdentityRole { Name = "admin", NormalizedName = "ADMIN" });
+                var userToAdd = await this._userManager.FindByEmailAsync("admin@sbs.com");
+                await this._userManager.AddToRoleAsync(userToAdd, "admin");
+            }
+
+            if (!_context.Roles.Any(x => x.Name == "user"))
+            {
+                await this._roleManager.CreateAsync(new IdentityRole { Name = "user", NormalizedName = "USER" });
             }
 
             await _context.SaveChangesAsync();

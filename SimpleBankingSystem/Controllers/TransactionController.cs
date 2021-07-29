@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Controllers
 {
+    [Authorize(Roles = "user")]
     public class TransactionController:Controller
     {
         private readonly SBSDbContext _context;
@@ -27,7 +28,6 @@ namespace SimpleBankingSystem.Controllers
             this._getUserService = getUserService;
         }
 
-        [Authorize]
         public IActionResult All(string period)
         {
             string[] periodAcceptedValues = { "today", "7days", "30days", "all" };
