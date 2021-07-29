@@ -11,6 +11,8 @@ namespace SimpleBankingSystem
     using SimpleBankingSystem.Infrastructure;
     using SimpleBankingSystem.Data.Models;
     using SimpleBankingSystem.Services;
+    using SimpleBankingSystem.Data.DataSeeding;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -46,9 +48,11 @@ namespace SimpleBankingSystem
             services.AddScoped<IErrorCollector, ErrorCollector>();
 
             services.AddScoped<IGetUserService, GetUserService>();
+
+            services.AddScoped<DefaultAdminDataSeeder>();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DefaultAdminDataSeeder seeder)
         {
             app.PrepareDatabase();
 
@@ -74,6 +78,9 @@ namespace SimpleBankingSystem
                     endpoints.MapRazorPages();
                 });
 
+            seeder.SeedAdmin().ConfigureAwait(true).GetAwaiter().GetResult();
+            
+            
         }
     }
 }
