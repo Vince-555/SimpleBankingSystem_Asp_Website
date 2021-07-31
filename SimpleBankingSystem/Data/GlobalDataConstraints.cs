@@ -11,6 +11,8 @@
 
         public const int NewsTittleMaxLenght = 150;
 
+        public const int NewsTittleMinLength = 2;
+
         public const int TransactionDescriptionMaxLength = 200;
 
         public const int UserNamesMaxLength = 30;
@@ -38,6 +40,8 @@
         public const int CityMinLength = 2;
 
         public const int NewsMaxShortenedViewLength = 250;
+
+        public const int NewsMinDescription = 10;
 
 
     }

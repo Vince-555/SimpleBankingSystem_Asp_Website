@@ -13,6 +13,7 @@ namespace SimpleBankingSystem.Data.Models
 
         [Required]
         [MaxLength(NewsTittleMaxLenght)]
+        [MinLength(NewsTittleMinLength)]
         public string Title { get; set; } 
 
         [Required]

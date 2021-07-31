@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using SimpleBankingSystem.Areas.Admin.Models
+@model AddNewsModel
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -56,7 +58,7 @@
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
-                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">@Model.UserNavbarModel.FirstName @Model.UserNavbarModel.LastName</span><img class="border rounded-circle img-profile" src="@Model.UserNavbarModel.PhotoUrl"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="/user/logout"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
@@ -69,9 +71,15 @@
                     <div>
                         <h3 class="text-dark mb-4">Add news :</h3>
                     </div>
+                    @{ Html.RenderPartial("_SuccessErrorPartial", Model.SuccessOrError); }
                     <div class="row">
                         <div class="col" style="margin-left: 140px;margin-right: 140px;">
-                            <form><input class="form-control" type="text" style="padding-bottom: 10px;margin-bottom: 0px;" placeholder="Title"><input class="form-control" type="text" style="margin-top: 34px;" placeholder="Image URL"><textarea class="form-control" style="margin-top: 34px;" placeholder="News description" rows="10" spellcheck="true" autofocus=""></textarea><button class="btn btn-primary active btn-block" type="submit" style="margin-top: 34px;margin-left: 1px;">Add News</button></form>
+                            <form action="/admin/adminhome/addnews" method="post">
+                                <input class="form-control" type="text" name="title" style="padding-bottom: 10px;margin-bottom: 0px;" placeholder="Title">
+                                <input class="form-control" type="text" name="ImgUrl" style="margin-top: 34px;" placeholder="Image URL">
+                                <textarea class="form-control" name="description" style="margin-top: 34px;" placeholder="News description" rows="10" spellcheck="true" autofocus=""></textarea>
+                                <button class="btn btn-primary active btn-block" type="submit" style="margin-top: 34px;margin-left: 1px;">Add News</button>
+                            </form>
                         </div>
                     </div>
                 </div>

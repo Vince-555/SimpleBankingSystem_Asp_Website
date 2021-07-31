@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SimpleBankingSystem.Areas.Admin.Models;
 using SimpleBankingSystem.Data;
+using SimpleBankingSystem.Data.Models;
 using SimpleBankingSystem.Models;
 using SimpleBankingSystem.Services;
 using System;
@@ -18,13 +20,13 @@ namespace SimpleBankingSystem.Controllers
     public class AdminHomeController :Controller
     {
         private readonly SBSDbContext _context;
-        private readonly IGetUserService _getUserService;
+        private readonly IErrorCollector _collector;
 
         public AdminHomeController(SBSDbContext context, 
-            IGetUserService getUserService)
+            IErrorCollector collector)
         {
             this._context = context;
-            this._getUserService = getUserService;
+            this._collector = collector;
         }
 
         public IActionResult TransactionsReview(string idOfTransaction, string period)
@@ -130,9 +132,7 @@ namespace SimpleBankingSystem.Controllers
                 selectedPeriodReturn[period] = "selected=\"\"";
             }
 
-            var adminDetails = this._context.Users
-                .Where(x => x.UserName == this.User.Identity.Name)
-                .FirstOrDefault();
+            var adminDetails = this.AdminFinder();
 
             var transactionAllModel = new TransactionAllViewModel
             {
@@ -152,7 +152,88 @@ namespace SimpleBankingSystem.Controllers
 
         public IActionResult AddNews()
         {
-            return this.View();
+            var adminDetails = this.AdminFinder();
+
+            var model = new AddNewsModel
+            {
+                UserNavbarModel = new UserNavbarViewModel
+                {
+                    FirstName = adminDetails.FirstName,
+                    LastName = adminDetails.LastName,
+                    PhotoUrl = adminDetails.PhotoUrl,
+                },
+            };
+
+            return this.View(model);
+        }
+
+        [HttpPost]
+        public IActionResult AddNews(AddNewsModel model)
+        {
+            AddNewsModel newsModel;
+
+            SuccessOrErrorMessageForPartialViewModel successOrError;
+
+            var adminDetails = this.AdminFinder();
+
+            var userNavbarModel = new UserNavbarViewModel
+            {
+                FirstName = adminDetails.FirstName,
+                LastName = adminDetails.LastName,
+                PhotoUrl = adminDetails.PhotoUrl,
+            };
+
+            if (this.ModelState.IsValid)
+            {
+                var newsToAdd = new News
+                {
+                    Date = DateTime.UtcNow,
+                    PhotoUrl = model.ImgUrl,
+                    Title = model.Title,
+                    Description = model.Description
+                };
+
+                this._context.News.Add(newsToAdd);
+
+                this._context.SaveChanges();
+
+                newsModel = new AddNewsModel
+                {
+                    UserNavbarModel = userNavbarModel,
+                    SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
+                    {
+                        AllMessages = new List<string>
+                        {
+                            "News successfully added"
+                        }
+                    },
+                };
+
+            }
+
+            else
+            {
+                successOrError = new SuccessOrErrorMessageForPartialViewModel
+                {
+                    IsError = true,
+                    AllMessages = this._collector.ErrorCollector(this.ModelState),
+                };
+
+                newsModel = new AddNewsModel
+                {
+                    SuccessOrError = successOrError,
+                    UserNavbarModel = userNavbarModel,
+                };
+            }
+
+            return this.View("addNews", newsModel);
+        }
+
+        private ApplicationUser AdminFinder()
+        {
+            return this._context.Users
+                .Where(x => x.UserName == this.User.Identity.Name)
+                .FirstOrDefault();
         }
     }
 }
