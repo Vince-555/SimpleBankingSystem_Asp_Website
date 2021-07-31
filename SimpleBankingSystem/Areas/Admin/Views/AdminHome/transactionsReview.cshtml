@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using SimpleBankingSystem.Models
+@model TransactionAllViewModel
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -27,8 +29,8 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="/admindash/transactionsreview"><i class="fa fa-line-chart"></i><span>Transactions Review</span></a></li>
-                    <li class="nav-item"><a class="nav-link active" href="/admindash/addnews"><i class="fa fa-newspaper-o"></i><span>Add News</span></a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/admin/AdminHome/transactionsreview"><i class="fa fa-line-chart"></i><span>Transactions Review</span></a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin/AdminHome/addnews"><i class="fa fa-newspaper-o"></i><span>Add News</span></a></li>
                 </ul>
                 <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>
             </div>
@@ -56,7 +58,7 @@
                             <div class="d-none d-sm-block topbar-divider"></div>
                             <li class="nav-item dropdown no-arrow">
                                 <div class="nav-item dropdown no-arrow">
-                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">Valerie Luna</span><img class="border rounded-circle img-profile" src="assets/img/avatars/avatar1.jpeg"></a>
+                                    <a class="dropdown-toggle nav-link" aria-expanded="false" data-toggle="dropdown" href="#"><span class="d-none d-lg-inline mr-2 text-gray-600 small">@Model.UserNavbarModel.FirstName @Model.UserNavbarModel.LastName</span><img class="border rounded-circle img-profile" src="@Model.UserNavbarModel.PhotoUrl"></a>
                                     <div class="dropdown-menu shadow dropdown-menu-right animated--grow-in">
                                         <div class="dropdown-divider"></div><a class="dropdown-item" href="/user/logout"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>&nbsp;Logout</a>
                                     </div>
@@ -75,18 +77,20 @@
                             <div class="row">
                                 <div class="col-md-6 text-nowrap">
                                     <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                        <label>
-                                            Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm">
-                                                <option value="today" selected="">today</option>
-                                                <option value="7 days">last 7 days</option>
-                                                <option value="30 days">last 30 days</option>
-                                                <option value="all">all</option>
-                                            </select>&nbsp;
-                                        </label>
+                                        <form id="form01" action="/admin/adminhome/transactionsreview" method="get">
+                                            <label>
+                                                Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
+                                                    <!option value="all" @Model.selectedPeriodReturnForView["all"]>all</!option>
+                                                    <!option value="today" @Model.selectedPeriodReturnForView["today"]> today</!option>
+                                                    <!option value="7days" @Model.selectedPeriodReturnForView["7days"]> last 7 days</!option>
+                                                    <!option value="30days" @Model.selectedPeriodReturnForView["30days"]> last 30 days</!option>
+                                                </select>&nbsp;
+                                            </label>
+                                        </form>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="text-md-right dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" type="button">Refresh</button></div>
+                                    <div class="text-md-right dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" form="form01" type="submit" value="Submit">Refresh</button></div>
                                 </div>
                             </div>
                             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
@@ -103,24 +107,24 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>18.55$</td>
-                                            <td>07/06/2021</td>
-                                            <td>ib7778ghdhgj8</td>
-                                            <td>Returning money</td>
-                                            <td>I.Kolev</td>
-                                            <td>I.Kolev</td>
-                                            <td style="padding-left: 0px;"><button class="btn btn-danger active btn-block" type="submit">Revoke</button></td>
-                                        </tr>
-                                        <tr>
-                                            <td>23.79$</td>
-                                            <td>03/06/2021</td>
-                                            <td>kn8988sdghcdf</td>
-                                            <td>Funds transfer</td>
-                                            <td>H.Ivanov</td>
-                                            <td>H.Ivanov</td>
-                                            <td><button class="btn btn-danger active btn-block" type="submit" style="padding-left: 0px;">Revoke</button></td>
-                                        </tr>
+                                        @foreach (var item in this.Model.Transactions)
+                                        {
+
+                                            <tr>
+                                                <td>@item.Ammount<text>$</text></td>
+                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.TransactionId</td>
+                                                <td>@item.Description</td>
+                                                <td>@item.From</td>
+                                                <td>@item.To</td>
+                                                <td style="padding-left: 0px;">
+                                                    <form action="/admin/adminhome/transactionsreview" method="post">
+                                                        <button class="btn btn-danger active btn-block" type="submit" name="IdOfTransaction" value="@item.TransactionId">Revoke</button>
+                                                    </form>
+                                                </td>
+                                            
+                                            </tr>
+                                         }
                                     </tbody>
                                     <tfoot>
                                         <tr>

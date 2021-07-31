@@ -38,7 +38,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    return this.Redirect("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");
@@ -55,7 +55,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                   return this.RedirectToAction("TransactionsReview", "AdminDash");
+                   return this.RedirectToAction("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");
@@ -71,7 +71,7 @@ namespace SimpleBankingSystem.Controllers
                 {
                     if (this.User.IsInRole("admin"))
                     {
-                        return this.RedirectToAction("TransactionsReview", "AdminDash");
+                        return this.Redirect("/admin/adminhome/transactionsreview");
                     }
 
                     return RedirectToAction("Index", "Home");
@@ -94,7 +94,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    return this.Redirect("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");
@@ -111,7 +111,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    return this.Redirect("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");
@@ -164,7 +164,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    return this.Redirect("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");
@@ -181,7 +181,7 @@ namespace SimpleBankingSystem.Controllers
             {
                 if (this.User.IsInRole("admin"))
                 {
-                    return this.RedirectToAction("TransactionsReview", "AdminDash");
+                    return this.Redirect("/admin/adminhome/transactionsreview");
                 }
 
                 return this.Redirect("/home/index");

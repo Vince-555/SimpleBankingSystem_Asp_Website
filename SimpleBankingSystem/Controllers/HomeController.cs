@@ -38,7 +38,7 @@ namespace SimpleBankingSystem.Controllers
         
             if (this.User.IsInRole("admin"))
             {
-                return this.RedirectToAction("transactionsreview", "AdminDash");
+                return this.Redirect("/admin/adminhome/transactionsreview");
             }
 
             var model = this.IndexDashboardViewModelFiller();
@@ -91,7 +91,7 @@ namespace SimpleBankingSystem.Controllers
                         catch (Exception ex)
                         {
                             transactionDb.Rollback();
-                            return this.View("404");
+                            return this.Redirect("/home/error404");
                         }
 
                         modelToPass.Balanace -= model.Ammount;
@@ -123,11 +123,9 @@ namespace SimpleBankingSystem.Controllers
             return this.View(modelToPass);
         }
 
-        public IActionResult TestError()
+        public IActionResult Error404()
         {
-            SuccessOrErrorMessageForPartialViewModel model = null;
-            return this.View(model);
-           
+            return this.View();
         }
 
         private IndexDashboardViewModel IndexDashboardViewModelFiller ()

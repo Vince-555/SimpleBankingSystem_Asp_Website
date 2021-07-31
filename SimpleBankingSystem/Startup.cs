@@ -48,7 +48,12 @@ namespace SimpleBankingSystem
 
             services.AddControllersWithViews();
 
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/user/login");
+            services.ConfigureApplicationCookie
+                (options =>
+                {
+                    options.LoginPath = "/user/login";
+                    options.AccessDeniedPath = "/home/error404";
+                });
 
             services.AddScoped<IErrorCollector, ErrorCollector>();
 
@@ -81,6 +86,10 @@ namespace SimpleBankingSystem
                 {
                     endpoints.MapDefaultControllerRoute();
                     endpoints.MapRazorPages();
+                    endpoints.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
                 });
 
             seeder.SeedAdmin().ConfigureAwait(true).GetAwaiter().GetResult();
