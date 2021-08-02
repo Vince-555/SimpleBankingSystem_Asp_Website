@@ -21,11 +21,14 @@ namespace SimpleBankingSystem.Controllers
     {
         private readonly SBSDbContext _context;
         private readonly IErrorCollector _collector;
+        private readonly IGetAdminTransaction _getAdminTransaction;
 
         public AdminHomeController(SBSDbContext context, 
-            IErrorCollector collector)
+            IErrorCollector collector,
+            IGetAdminTransaction getAdminTransaction)
         {
             this._context = context;
+            this._getAdminTransaction = getAdminTransaction;
             this._collector = collector;
         }
 
@@ -79,21 +82,9 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/error404");
             }
 
-            var allTransactions = this._context.Transactions
-                .Include(x => x.Sender)
-                .ThenInclude(x => x.User)
-                .Include(x => x.Receiver)
-                .ThenInclude(x => x.User)
-                .Select(x=>new TransactionModel 
-                { 
-                    TransactionId = x.Id,
-                    Date = x.Date,
-                    Description = x.Description.Length > 20 ? x.Description.Substring(0, 20) + "..." : x.Description,
-                    Ammount = x.Ammount.ToString("G", CultureInfo.InvariantCulture),
-                    From = x.Sender.User.FirstName + " " + x.Sender.User.LastName,
-                    To = x.Receiver.User.FirstName + " " + x.Receiver.User.LastName,
-                })
-                .ToList();
+            this.TempData["period"] = period;
+
+            var allTransactions = this._getAdminTransaction.GetAdminTransactions(this._context);
 
             DateTime receivedDateTimePeriod;
 
