@@ -226,7 +226,8 @@ namespace SimpleBankingSystem.Controllers
                 };
             }
 
-            return this.View("addNews", newsModel);
+           return this.View("addNews", newsModel);
+
         }
 
         private ApplicationUser AdminFinder()

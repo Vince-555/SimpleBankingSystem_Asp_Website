@@ -1,0 +1,97 @@
+﻿@model PdfPrintModel
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Transactions Report</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/Popup-Element-Overlay-1.css">
+    <link rel="stylesheet" href="/css/Popup-Element-Overlay.css">
+</head>
+
+<body id="page-top">
+    <div id="wrapper">
+        <div class="d-flex flex-column" id="content-wrapper">
+            <div id="content">
+                <div class="container-fluid">
+                    <h3 class="text-dark mb-4">Transactions report</h3>
+                    <div class="card shadow">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 font-weight-bold">For: @Model.UserFullName - @Model.UserEmail</p>
+                            <p class="text-primary m-0 font-weight-bold">Period: all&nbsp; Issue date: @DateTime.UtcNow.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                                <table class="table my-0" id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Type</th>
+                                            <th>Ammount</th>
+                                            <th>Date</th>
+                                            <th>Id</th>
+                                            <th>Description</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in this.Model.Transactions)
+                                        {
+                                            string icon = String.Empty;
+                                            if (item.Type == "In")
+                                            {
+                                                icon = "<i class=\"fa fa-plus\" style=\"font - size: 28px; \"></i>";
+                                            }
+
+                                            else
+                                            {
+                                                icon = "<i class=\"fa fa-minus\" style=\"font - size: 28px; \"></i>";
+                                            }
+
+                                            <tr>
+                                                <td>@Html.Raw(icon)</td>
+                                                <td>@item.Ammount<text>$</text></td>
+                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.TransactionId</td>
+                                                <td>@item.Description</td>
+                                                <td>@item.From</td>
+                                                <td>@item.To</td>
+
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td><strong>Type</strong></td>
+                                            <td><strong>Ammount</strong></td>
+                                            <td><strong>Date</strong></td>
+                                            <td><strong>Id</strong></td>
+                                            <td><strong>Description</strong></td>
+                                            <td><strong>From</strong></td>
+                                            <td><strong>To</strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.js"></script>
+    <script src="/js/Popup-Element-Overlay.js"></script>
+    <script src="/js/theme.js"></script>
+    <script type="text/javascript">
+        window.onload = function () { window.print(); }
+    </script>
+</body>
+
+</html>
