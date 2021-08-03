@@ -59,9 +59,7 @@ namespace SimpleBankingSystem
 
             services.AddScoped<IGetUserService, GetUserService>();
 
-            services.AddScoped<IGetUserTransactions, GetUserTransactionsService>();
-
-            services.AddScoped<IGetAdminTransaction, GetAdminTransactionsService>();
+            services.AddScoped<IGetTransactions, GetTransactionsService>();
 
             services.AddScoped<DefaultAdminDataSeeder>();
         }

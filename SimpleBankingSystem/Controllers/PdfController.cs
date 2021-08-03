@@ -18,20 +18,17 @@ namespace SimpleBankingSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SBSDbContext _context;
         private readonly IGetUserService _getUserService;
-        private readonly IGetUserTransactions _getUserTransactions;
-        private readonly IGetAdminTransaction _getAdminTransaction;
+        private readonly IGetTransactions _getTransactions;
 
         public PdfController(UserManager<ApplicationUser> userManager,
             IGetUserService getUserService,
-            IGetUserTransactions getUserTransactions,
-            IGetAdminTransaction getAdminTransaction,
+            IGetTransactions getTransactions,
             SBSDbContext context)
         {
             this._userManager = userManager;
             this._context = context;
             this._getUserService = getUserService;
-            this._getUserTransactions = getUserTransactions;
-            this._getAdminTransaction = getAdminTransaction;
+            this._getTransactions = getTransactions;
         }
 
         public IActionResult Print()
@@ -46,7 +43,7 @@ namespace SimpleBankingSystem.Controllers
 
             if (this.User.IsInRole("admin"))
             {
-                var transactions = this.GetAdminTransactionsForPeriod(period);
+                var transactions = this._getTransactions.GetAdminTransactionsForPeriod(this._context, period);
 
                 pdfModel = new PdfPrintModel
                 {
@@ -59,7 +56,7 @@ namespace SimpleBankingSystem.Controllers
 
             else
             {
-                var selectedTransactions = this._getUserTransactions.GetUserTransactions(user, period);
+                var selectedTransactions = this._getTransactions.GetUserTransactionsForPeriod(user, period);
 
                 pdfModel = new PdfPrintModel
                 {
@@ -73,36 +70,6 @@ namespace SimpleBankingSystem.Controllers
             return this.View(pdfModel);
         }
 
-        public List<TransactionModel> GetAdminTransactionsForPeriod(string period)
-        {
-            var adminTransactions = this._getAdminTransaction.GetAdminTransactions(this._context);
-                 
-            DateTime receivedDateTimePeriod;
-
-            switch (period)
-            {
-                case "today":
-                    receivedDateTimePeriod = new DateTime(DateTime.UtcNow.Year,
-                        DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 1);
-                    break;
-                case "7days":
-                    receivedDateTimePeriod = DateTime.UtcNow.AddDays(-7d);
-                    break;
-                case "30days":
-                    receivedDateTimePeriod = DateTime.UtcNow.AddDays(-30d);
-                    break;
-                default:
-                    receivedDateTimePeriod = DateTime.MinValue;
-                    break;
-            }
-
-            var selectedTransactions = adminTransactions
-                .Where(x => DateTime.Compare(x.Date, receivedDateTimePeriod) >= 0)
-                .OrderByDescending(x => x.Date)
-                .ToList();
-
-            return selectedTransactions;
-        }
     }
 }
 

@@ -19,16 +19,16 @@ namespace SimpleBankingSystem.Controllers
         private readonly SBSDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IGetUserService _getUserService;
-        private readonly IGetUserTransactions _getUserTransactions;
+        private readonly IGetTransactions _getTransactions;
 
         public TransactionController(SBSDbContext context, UserManager<ApplicationUser> userManager,
             IGetUserService getUserService,
-            IGetUserTransactions getUserTransactions)
+            IGetTransactions getTransactions)
         {
             this._context = context;
             this._userManager = userManager;
             this._getUserService = getUserService;
-            this._getUserTransactions = getUserTransactions;
+            this._getTransactions = getTransactions;
         }
 
         public IActionResult All(string period)
@@ -44,7 +44,7 @@ namespace SimpleBankingSystem.Controllers
 
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
-            var selectedTransactions = this._getUserTransactions.GetUserTransactions(user, period);
+            var selectedTransactions = this._getTransactions.GetUserTransactionsForPeriod(user, period);
 
             Dictionary<string, string> selectedPeriodReturn = new Dictionary<string, string>
             {

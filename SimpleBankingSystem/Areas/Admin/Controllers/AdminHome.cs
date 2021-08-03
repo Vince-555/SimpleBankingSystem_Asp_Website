@@ -21,14 +21,14 @@ namespace SimpleBankingSystem.Controllers
     {
         private readonly SBSDbContext _context;
         private readonly IErrorCollector _collector;
-        private readonly IGetAdminTransaction _getAdminTransaction;
+        private readonly IGetTransactions _getTransactions;
 
         public AdminHomeController(SBSDbContext context, 
             IErrorCollector collector,
-            IGetAdminTransaction getAdminTransaction)
+            IGetTransactions getTransactions)
         {
             this._context = context;
-            this._getAdminTransaction = getAdminTransaction;
+            this._getTransactions = getTransactions;
             this._collector = collector;
         }
 
@@ -42,7 +42,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (transaction == null)
                 {
-                    return this.Redirect("home/error404/error404");
+                    return this.Redirect("home/error404");
                 }
 
                 var sender = this._context.BankAccounts
@@ -84,31 +84,7 @@ namespace SimpleBankingSystem.Controllers
 
             this.TempData["period"] = period;
 
-            var allTransactions = this._getAdminTransaction.GetAdminTransactions(this._context);
-
-            DateTime receivedDateTimePeriod;
-
-            switch (period)
-            {
-                case "today":
-                    receivedDateTimePeriod = new DateTime(DateTime.UtcNow.Year,
-                        DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 1);
-                    break;
-                case "7days":
-                    receivedDateTimePeriod = DateTime.UtcNow.AddDays(-7d);
-                    break;
-                case "30days":
-                    receivedDateTimePeriod = DateTime.UtcNow.AddDays(-30d);
-                    break;
-                default:
-                    receivedDateTimePeriod = DateTime.MinValue;
-                    break;
-            }
-
-            var selectedTransactions = allTransactions
-                .Where(x => DateTime.Compare(x.Date, receivedDateTimePeriod) >= 0)
-                .OrderByDescending(x => x.Date)
-                .ToList();
+            var selectedTransactions = this._getTransactions.GetAdminTransactionsForPeriod(this._context, period);
 
             Dictionary<string, string> selectedPeriodReturn = new Dictionary<string, string>
             {
