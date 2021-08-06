@@ -79,7 +79,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (news.Count<1)
                 {
-                    return this.View("404");
+                    return this.View("/home/error404");
                 }
 
                 modelToPass = new NewsPageModel

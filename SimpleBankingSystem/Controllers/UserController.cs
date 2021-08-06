@@ -44,7 +44,17 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/index");
             }
 
-            return this.View();
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
+            var SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
+            {
+                IsError = errorReceivedData,
+                AllMessages = messagesReceivedData,
+            };
+
+            return this.View(SuccessOrError);
         }
 
         [HttpPost]
@@ -79,12 +89,12 @@ namespace SimpleBankingSystem.Controllers
 
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
-            
-            return this.View(new SuccessOrErrorMessageForPartialViewModel
-            {
-                IsError = true,
-                AllMessages = _collector.ErrorCollector(this.ModelState)
-            });
+
+            this.TempData["IsError"] = true;
+
+            this.TempData["Messages"] = _collector.ErrorCollector(this.ModelState).ToArray();
+
+            return this.RedirectToAction("Login");    
         }
 
         [AllowAnonymous]
@@ -100,7 +110,17 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/index");
             }
 
-            return this.View();
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
+            var SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
+            {
+                IsError = errorReceivedData,
+                AllMessages = messagesReceivedData,
+            };
+
+            return this.View(SuccessOrError);
         }
 
         [HttpPost]
@@ -150,11 +170,11 @@ namespace SimpleBankingSystem.Controllers
 
             }
 
-            return this.View(new SuccessOrErrorMessageForPartialViewModel 
-            { 
-                IsError = true,
-                AllMessages = _collector.ErrorCollector(this.ModelState)
-            });
+            this.TempData["IsError"] = true;
+
+            this.TempData["Messages"] = _collector.ErrorCollector(this.ModelState).ToArray();
+
+            return this.RedirectToAction("Register");
         }
 
         [AllowAnonymous]
@@ -170,7 +190,18 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/index");
             }
 
-            return this.View();
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
+            var SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
+            {
+                IsError = errorReceivedData,
+                AllMessages = messagesReceivedData,
+            };
+
+
+            return this.View(SuccessOrError);
         }
 
         [HttpPost]
@@ -187,13 +218,9 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/index");
             }
 
-            var message = $"An email has been sent to {model.Email}";
+            this.TempData["Messages"] = new string[] { $"An email has been sent to {model.Email}" };
 
-            return this.View(new SuccessOrErrorMessageForPartialViewModel 
-            { 
-                IsError = false,
-                AllMessages = new List<string> { message }
-            });
+            return this.RedirectToAction("ForgotPassword");
         }
 
         [Authorize]

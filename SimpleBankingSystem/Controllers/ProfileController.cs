@@ -37,11 +37,15 @@ namespace SimpleBankingSystem.Controllers
         public IActionResult Profile()
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
-           
-           // var address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
+
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
+            // var address = this._context.UserAddresses.Where(x => x.UserId == user.Id).FirstOrDefault();
             //ef fails to load address otherwise even though include is used???
 
-            if(user.Address==null)
+            if (user.Address==null)
             {
                 var newAddress = new UserAddress()
                 {
@@ -60,7 +64,11 @@ namespace SimpleBankingSystem.Controllers
             }
 
             var profileModel = this.ProfileModelFiller();
-            
+
+            profileModel.SuccessOrError.IsError = errorReceivedData;
+
+            profileModel.SuccessOrError.AllMessages = messagesReceivedData;
+
             return this.View(profileModel);
         }
 
@@ -68,10 +76,6 @@ namespace SimpleBankingSystem.Controllers
         public async Task<IActionResult> ChangeUserSettings(ChangeUserSettingsModel model)
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
-
-            SuccessOrErrorMessageForPartialViewModel successOrError;
-
-            ProfileViewModel modelToPass;
 
             int newSettings = 0;
 
@@ -106,37 +110,28 @@ namespace SimpleBankingSystem.Controllers
 
                 if (newSettings == 0)
                 {
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        IsError = true,
-                        AllMessages = new List<string>() { "No settings have been updated" }
-                    };
+                    this.TempData["IsError"] = true;
+
+                    this.TempData["Messages"] = new string[] { "No settings have been updated" };   
                 }
 
                 else
                 {
                     await this._userManager.UpdateAsync(user);
 
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        AllMessages = new List<string>() { "User settings updated successfully" }
-                    };
+                    this.TempData["Messages"] = new string[] { "User settings updated successfully" };
+                    
                 }
             }
             else
             {
-                successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                {
-                    IsError = true,
-                    AllMessages = this._collector.ErrorCollector(this.ModelState)
-                };
+                this.TempData["IsError"] = true;
+
+                this.TempData["Messages"] = this._collector.ErrorCollector(this.ModelState).ToArray();
+               
             }
 
-            modelToPass = this.ProfileModelFiller();
-
-            modelToPass.SuccessOrError = successOrError;
-
-            return this.View("Profile", modelToPass);
+            return this.RedirectToAction("Profile");
         }
 
         [HttpPost]
@@ -164,10 +159,6 @@ namespace SimpleBankingSystem.Controllers
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
-            SuccessOrErrorMessageForPartialViewModel successOrError;
-
-            ProfileViewModel modelToPass;
-
             if (this.ModelState.IsValid)
             {
                 var result = await this._userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
@@ -176,53 +167,31 @@ namespace SimpleBankingSystem.Controllers
                 {
                     await this._userManager.UpdateAsync(user);
 
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        AllMessages = new List<string>()
-                        {
-                            "Password successfully changed"
-                        }
-                    };
+                    this.TempData["Messages"] = new string[] { "Password successfully changed" };
                 }
 
                 else
                 {
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        IsError = true,
+                    this.TempData["IsError"] = true;
 
-                        AllMessages = new List<string>()
-                        {
-                            "Incorrect current password"
-                        }
-                    };
+                    this.TempData["Messages"] = new string[] { "Incorrect current password" };
                 }
             }
 
             else
             {
-                successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                {
-                    IsError = true,
-                    AllMessages = this._collector.ErrorCollector(this.ModelState)
-                };
+                this.TempData["IsError"] = true;
+
+                this.TempData["Messages"] = this._collector.ErrorCollector(this.ModelState).ToArray();  
             }
 
-            modelToPass = this.ProfileModelFiller();
-
-            modelToPass.SuccessOrError = successOrError;
-
-            return this.View("Profile", modelToPass);
+            return this.RedirectToAction("Profile");
         }
 
         [HttpPost]
         public IActionResult ChangeAddress(ChangeAddressModel model)
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
-
-            SuccessOrErrorMessageForPartialViewModel successOrError;
-
-            ProfileViewModel modelToPass;
 
             if(this.ModelState.IsValid)
             {
@@ -236,43 +205,25 @@ namespace SimpleBankingSystem.Controllers
 
                     this._context.SaveChanges();
 
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        AllMessages = new List<string>()
-                        {
-                            "Address successfully updated"
-                        }
-                    };
+                    this.TempData["Messages"] = new string[] { "Address successfully updated" };
                 }
 
                 else
                 {
-                    successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                    {
-                        IsError = true,
-                        AllMessages = new List<string>()
-                        {
-                            
-                            "Enter a correct country"
-                        },
-                    };
+                    this.TempData["IsError"] = true;
+
+                    this.TempData["Messages"] = new string[] { "Enter a correct country" };
                 }
             }
 
             else
             {
-                successOrError = new SuccessOrErrorMessageForPartialViewModel()
-                {
-                    IsError = true,
-                    AllMessages = this._collector.ErrorCollector(this.ModelState)
-                };
+                this.TempData["IsError"] = true;
+
+                this.TempData["Messages"] = this._collector.ErrorCollector(this.ModelState).ToArray();    
             }
 
-            modelToPass = this.ProfileModelFiller();
-
-            modelToPass.SuccessOrError = successOrError;
-
-            return this.View("Profile", modelToPass);
+            return this.RedirectToAction("Profile");
         }
 
         private ProfileViewModel ProfileModelFiller()
@@ -291,6 +242,7 @@ namespace SimpleBankingSystem.Controllers
                 City = user.Address.City,
                 Country = user.Address.Country,
                 Email = user.Email,
+                SuccessOrError = new SuccessOrErrorMessageForPartialViewModel(),
             };
 
             return profileModel;

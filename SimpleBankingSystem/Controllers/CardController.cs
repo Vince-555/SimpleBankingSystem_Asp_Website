@@ -32,10 +32,15 @@ namespace SimpleBankingSystem.Controllers
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
             SuccessOrErrorMessageForPartialViewModel successOrError = new SuccessOrErrorMessageForPartialViewModel()
             {
-                IsError = false,
-                AllMessages = new List<string>(),
+                IsError = errorReceivedData,
+            
+                AllMessages = messagesReceivedData,
             };
 
             if(block!=0)
@@ -46,7 +51,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card==null || card.IsBlocked)
                 {
-                    return this.View("404");
+                    return this.Redirect("/home/error404");
                 }
 
                 card.IsBlocked = true;
@@ -61,7 +66,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card == null || !card.IsBlocked)
                 {
-                    return this.View("404");
+                    return this.Redirect("/home/error404");
                 }
 
                 card.IsBlocked = false;
@@ -76,7 +81,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (card == null)
                 {
-                    return this.View("404");
+                    return this.Redirect("/home/error404");
                 }
 
                 this._context.Remove(card);
@@ -92,33 +97,23 @@ namespace SimpleBankingSystem.Controllers
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
-            SuccessOrErrorMessageForPartialViewModel successOrError = new SuccessOrErrorMessageForPartialViewModel()
-            {
-                IsError = false,
-                AllMessages = new List<string>(),
-            };
-
-            var allCardsModel = this.AllCardsViewModelFiller(successOrError);
-
             if (card!= "visa" && card!="mastercard")
             {
-                return this.View("404");
+                return this.Redirect("/home/error404"); 
             }
 
             if (cardName.Length > GeneralInputFieldMaxLenght)
             {
-                successOrError.IsError = true;
-                successOrError.AllMessages.Add("Card name is too long");
-                allCardsModel.SuccessOrError = successOrError;
-                return this.View("AllCards",allCardsModel);
+                this.TempData["IsError"] = true;
+                this.TempData["Messages"] = new string[] { "Card name is too long"};
+                return this.RedirectToAction("AllCards");
             }
 
             if(user.BankAccount.Cards.Count==5)
-            {
-                successOrError.IsError = true;
-                successOrError.AllMessages.Add("You have reached max number of cards");
-                allCardsModel.SuccessOrError = successOrError;
-                return this.View("AllCards", allCardsModel);
+            { 
+                this.TempData["IsError"] = true;
+                this.TempData["Messages"] = new string[] { "You have reached max number of cards" };
+                return this.RedirectToAction("AllCards");
             }
 
             var newCard = new Card()
@@ -134,12 +129,10 @@ namespace SimpleBankingSystem.Controllers
 
             this._context.SaveChanges();
 
-            successOrError.AllMessages.Add("Your card has been added successfully. " +
-                "Please collect it at your local branch");
+            this.TempData["Messages"] = new string[]{"Your card has been added successfully. " +
+                "Please collect it at your local branch" };
 
-            allCardsModel = this.AllCardsViewModelFiller(successOrError);
-
-            return this.View("AllCards", allCardsModel);
+            return this.RedirectToAction("AllCards");
         }
 
         private AllCardsViewModel AllCardsViewModelFiller (SuccessOrErrorMessageForPartialViewModel successOrError)

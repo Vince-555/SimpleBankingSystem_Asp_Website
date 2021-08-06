@@ -43,6 +43,14 @@ namespace SimpleBankingSystem.Controllers
 
             var model = this.IndexDashboardViewModelFiller();
 
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
+            model.SuccessOrError.IsError = errorReceivedData;
+
+            model.SuccessOrError.AllMessages = messagesReceivedData;
+
             return this.View(model);
         }
 
@@ -51,8 +59,6 @@ namespace SimpleBankingSystem.Controllers
         public IActionResult Index(IndexDashboardPostModel model)
         {
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
-
-            var modelToPass = this.IndexDashboardViewModelFiller();
 
             if (this.ModelState.IsValid)
             {
@@ -94,15 +100,11 @@ namespace SimpleBankingSystem.Controllers
                             return this.Redirect("/home/error404");
                         }
 
-                        modelToPass.Balanace -= model.Ammount;
+                        this.TempData["IsError"] = false;
 
-                        modelToPass.SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
-                        {
-                            IsError = false,
-                            AllMessages = new List<string> { $"Successfully sent {model.Ammount}$" }
-                        };
+                        this.TempData["Messages"] = new string[] { $"Successfully sent {model.Ammount}$" };
 
-                        return this.View(modelToPass);
+                        return this.RedirectToAction("Index");
                     }
 
                     this.ModelState.AddModelError(string.Empty, "IBAN is incorrect");
@@ -114,13 +116,11 @@ namespace SimpleBankingSystem.Controllers
                 }
             }
 
-            modelToPass.SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
-            {
-                IsError = true,
-                AllMessages = this._collector.ErrorCollector(this.ModelState)
-            };
+            this.TempData["IsError"] = true;
+            this.TempData["Messages"] = this._collector.ErrorCollector(this.ModelState).ToArray();
 
-            return this.View(modelToPass);
+
+            return this.RedirectToAction("Index");
         }
 
         public IActionResult Error404()
@@ -166,7 +166,7 @@ namespace SimpleBankingSystem.Controllers
                 ActiveCards = activeCards,
                 MontlyEarnings = monthlyEarnings,
                 Iban = iban,
-                SuccessOrError = null,
+                SuccessOrError = new SuccessOrErrorMessageForPartialViewModel(),
             };
 
             return model;
