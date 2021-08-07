@@ -14,6 +14,8 @@ namespace SimpleBankingSystem
     using SimpleBankingSystem.Data.DataSeeding;
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Rewrite;
 
     public class Startup
     {
@@ -31,6 +33,11 @@ namespace SimpleBankingSystem
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.Configure<MvcOptions>(options =>
+            {
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
+
             services.AddDbContext<SBSDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -39,7 +46,7 @@ namespace SimpleBankingSystem
             services
                 .AddDefaultIdentity<ApplicationUser>(options =>
                 {
-                    options.Password.RequireDigit = false;  //can be changed later
+                    //can be changed later
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
@@ -101,6 +108,9 @@ namespace SimpleBankingSystem
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
                 });
+
+            var options = new RewriteOptions().AddRedirectToHttps();
+            app.UseRewriter(options);
 
             seeder.SeedAdmin().ConfigureAwait(true).GetAwaiter().GetResult();
             
