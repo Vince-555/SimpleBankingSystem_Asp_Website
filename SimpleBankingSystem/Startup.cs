@@ -13,6 +13,7 @@ namespace SimpleBankingSystem
     using SimpleBankingSystem.Services;
     using SimpleBankingSystem.Data.DataSeeding;
     using System.Threading.Tasks;
+    using Microsoft.AspNetCore.Http;
 
     public class Startup
     {
@@ -24,6 +25,12 @@ namespace SimpleBankingSystem
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
             services.AddDbContext<SBSDbContext>(options => options
             .UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -81,6 +88,7 @@ namespace SimpleBankingSystem
             app
                 .UseHttpsRedirection()
                 .UseStaticFiles()
+                .UseCookiePolicy()
                 .UseRouting()
                 .UseAuthentication()
                 .UseAuthorization()
