@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using SimpleBankingSystem.Data;
 using SimpleBankingSystem.Data.Models;
 using SimpleBankingSystem.Models;
@@ -18,13 +19,16 @@ namespace SimpleBankingSystem.Controllers
         private readonly SBSDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IGetUserService _getUserService;
+        private readonly IMemoryCache _cache;
 
         public NewsController(SBSDbContext context, UserManager<ApplicationUser> userManager,
-            IGetUserService getUserService)
+            IGetUserService getUserService,
+            IMemoryCache cache)
         {
             this._context = context;
             this._userManager = userManager;
             this._getUserService = getUserService;
+            this._cache = cache;
         }
 
         public IActionResult News(string readMoreId)
@@ -42,7 +46,11 @@ namespace SimpleBankingSystem.Controllers
 
             if (readMoreId == null)
             {
-                var latestNews = this._context.News
+                List<SingleNewsModel> latestNews;
+
+                if(!this._cache.TryGetValue("latestNews",out latestNews))
+                {
+                    latestNews = this._context.News
                     .OrderByDescending(x => x.Date)
                     .Take(4)
                     .Select(x => new SingleNewsModel
@@ -56,10 +64,13 @@ namespace SimpleBankingSystem.Controllers
                     })
                     .ToList();
 
+                    this._cache.Set("latestNews", latestNews, TimeSpan.FromHours(1));
+                }
+
                 modelToPass = new NewsPageModel
                 {
                     UserNavbarModel = userNavbarModel,
-                    News = latestNews
+                    News = latestNews,
                 };
             }
 
