@@ -32,7 +32,7 @@ namespace SimpleBankingSystem.Controllers
             this._collector = collector;
         }
 
-        public IActionResult TransactionsReview(string idOfTransaction, string period)
+        public IActionResult TransactionsReview(string idOfTransaction, string period, string page)
         {
             if (idOfTransaction != null)
             {
@@ -86,20 +86,23 @@ namespace SimpleBankingSystem.Controllers
 
             var selectedTransactions = this._getTransactions.GetAdminTransactionsForPeriod(this._context, period);
 
-            Dictionary<string, string> selectedPeriodReturn = new Dictionary<string, string>
-            {
-                {"today",String.Empty},
-                {"7days",String.Empty},
-                {"30days",String.Empty},
-                {"all",String.Empty}
-            };
+            var adminDetails = this.AdminFinder();
 
-            if (period != null)
+            var singlePageLength = 10;
+
+            var pageToInt = page == null ? 1 : int.Parse(page);
+
+            var totalPages = Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength);
+
+            if (pageToInt > totalPages || pageToInt < 1)
             {
-                selectedPeriodReturn[period] = "selected=\"\"";
+                return this.View("/home/error404");
             }
 
-            var adminDetails = this.AdminFinder();
+            var pagedTransactions = selectedTransactions
+                .Skip(singlePageLength * (pageToInt - 1))
+                .Take(singlePageLength)
+                .ToList();
 
             var transactionAllModel = new TransactionAllViewModel
             {
@@ -109,8 +112,10 @@ namespace SimpleBankingSystem.Controllers
                     LastName = adminDetails.LastName,
                     PhotoUrl = adminDetails.PhotoUrl,
                 },
-                Transactions = selectedTransactions,
-                selectedPeriodReturnForView = selectedPeriodReturn
+                Transactions = pagedTransactions,
+                PeriodReturn = period,
+                TotalPages = totalPages,
+                CurrentPage = pageToInt,
             };
 
 
@@ -121,6 +126,10 @@ namespace SimpleBankingSystem.Controllers
         {
             var adminDetails = this.AdminFinder();
 
+            var errorReceivedData = (bool?)this.TempData["IsError"] ?? false;
+
+            var messagesReceivedData = ((string[])this.TempData["Messages"]) ?? new string[0];
+
             var model = new AddNewsModel
             {
                 UserNavbarModel = new UserNavbarViewModel
@@ -129,7 +138,12 @@ namespace SimpleBankingSystem.Controllers
                     LastName = adminDetails.LastName,
                     PhotoUrl = adminDetails.PhotoUrl,
                 },
+                SuccessOrError = new SuccessOrErrorMessageForPartialViewModel(),
             };
+
+            model.SuccessOrError.IsError = errorReceivedData;
+
+            model.SuccessOrError.AllMessages = messagesReceivedData;
 
             return this.View(model);
         }
@@ -137,18 +151,6 @@ namespace SimpleBankingSystem.Controllers
         [HttpPost]
         public IActionResult AddNews(AddNewsModel model)
         {
-            AddNewsModel newsModel;
-
-            SuccessOrErrorMessageForPartialViewModel successOrError;
-
-            var adminDetails = this.AdminFinder();
-
-            var userNavbarModel = new UserNavbarViewModel
-            {
-                FirstName = adminDetails.FirstName,
-                LastName = adminDetails.LastName,
-                PhotoUrl = adminDetails.PhotoUrl,
-            };
 
             if (this.ModelState.IsValid)
             {
@@ -164,37 +166,17 @@ namespace SimpleBankingSystem.Controllers
 
                 this._context.SaveChanges();
 
-                newsModel = new AddNewsModel
-                {
-                    UserNavbarModel = userNavbarModel,
-                    SuccessOrError = new SuccessOrErrorMessageForPartialViewModel
-                    {
-                        AllMessages = new List<string>
-                        {
-                            "News successfully added"
-                        }
-                    },
-                };
-
+                this.TempData["Messages"] = new string[] { "News successfully added" };
             }
 
             else
             {
-                successOrError = new SuccessOrErrorMessageForPartialViewModel
-                {
-                    IsError = true,
-                    AllMessages = this._collector.ErrorCollector(this.ModelState),
-                };
+                this.TempData["IsError"] = true;
 
-                newsModel = new AddNewsModel
-                {
-                    SuccessOrError = successOrError,
-                    UserNavbarModel = userNavbarModel,
-                };
+                this.TempData["Messages"] = this._collector.ErrorCollector(this.ModelState).ToArray();
             }
 
-           return this.View("addNews", newsModel);
-
+            return this.Redirect("/admin/adminhome/addnews");
         }
 
         private ApplicationUser AdminFinder()

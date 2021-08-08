@@ -83,25 +83,25 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                    <div class="col-md-6 text-nowrap">
-                                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                            <form id="form01" action="/transaction/all" method="get">
-                                                <label>
-                                                    Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
-                                                        <!option value="all" @Model.selectedPeriodReturnForView["all"]>all</!option>
-                                                        <!option value="today" @Model.selectedPeriodReturnForView["today"] > today</!option>
-                                                        <!option value="7days" @Model.selectedPeriodReturnForView["7days"] > last 7 days</!option>
-                                                        <!option value="30days" @Model.selectedPeriodReturnForView["30days"]> last 30 days</!option>
-                                                        
-                                                    </select>&nbsp;
-                                                </label>
-                                            </form>
-                                        </div>
+                                <div class="col-md-6 text-nowrap">
+                                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                                        <form id="form01" action="/transaction/all" method="get">
+                                            <label>
+                                                Show&nbsp;<select class="form-control form-control-sm custom-select custom-select-sm" id="period" name="period">
+                                                    <!option value="all" @if (Model.PeriodReturn == "all") { @Html.Raw("selected=\"\"") ; }>all</!option>
+                                                    <!option value="today" @if (Model.PeriodReturn == "today") { @Html.Raw("selected=\"\"") ; }> today</!option>
+                                                    <!option value="7days" @if (Model.PeriodReturn == "7days") { @Html.Raw("selected=\"\"") ; }> last 7 days</!option>
+                                                    <!option value="30days" @if (Model.PeriodReturn == "30days") { @Html.Raw("selected=\"\"") ; }> last 30 days</!option>
+
+                                                </select>&nbsp;
+                                            </label>
+                                        </form>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="text-md-right dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" form="form01" type="submit" value="Submit">Refresh</button></div>
-                                    </div>
-                                
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-md-right dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" form="form01" type="submit" value="Submit">Refresh</button></div>
+                                </div>
+
                             </div>
                             <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                                 <table class="table my-0" id="dataTable">
@@ -131,19 +131,19 @@
                                                 icon = "<i class=\"fa fa-minus\" style=\"font - size: 28px; \"></i>";
                                             }
 
-                                            <tr>
-                                                <td>@Html.Raw(icon)</td>
-                                                <td>@item.Ammount<text>$</text></td>
-                                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
-                                                <td>@item.TransactionId</td>
-                                                <td>@item.Description</td>
-                                                <td>@item.From</td>
-                                                <td>@item.To</td>
+                            <tr>
+                                <td>@Html.Raw(icon)</td>
+                                <td>@item.Ammount<text>$</text></td>
+                                <td>@item.Date.ToString("dd/MM/yyyy")</td>
+                                <td>@item.TransactionId</td>
+                                <td>@item.Description</td>
+                                <td>@item.From</td>
+                                <td>@item.To</td>
 
 
-                                            </tr>
-                                        }
-                                        
+                            </tr>
+}
+
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -159,7 +159,28 @@
                                     </tfoot>
                                 </table>
                             </div>
-                        </div>
+                            <nav>
+                                <ul class="pagination">
+                                    @{int previous; }
+                                    @if (Model.CurrentPage == 1) { previous = 1; } else { previous = Model.CurrentPage - 1; }
+                                    <li class="page-item"><a class="page-link" href="?period=@Model.PeriodReturn&page=@previous" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+
+                                    @{
+                                        int pagesToDisplay;
+                                        if (Model.TotalPages <= 5) { pagesToDisplay = (int)Model.TotalPages; }
+                                        else { pagesToDisplay = 5; }
+                                     }
+                                    @for (int i = 1; i <= pagesToDisplay; i++)
+                                    {
+                                <li class="page-item"><a class="page-link" href="?period=@Model.PeriodReturn&page=@i" @if (Model.CurrentPage == i) { @Html.Raw("style = \"font-weight: bold;\"") ; }>@i</a></li>}
+
+
+                                    @{int next; }
+                                    @if (Model.CurrentPage == Model.TotalPages) { next = (int)Model.TotalPages; } else { next = Model.CurrentPage + 1; }
+                                    <li class="page-item"><a class="page-link" href="?period=@Model.PeriodReturn&page=@next" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                                </ul>
+                            </nav>
+                        </div>                       
                     </div>
                 </div>
             </div>

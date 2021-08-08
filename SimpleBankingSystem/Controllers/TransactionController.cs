@@ -31,7 +31,7 @@ namespace SimpleBankingSystem.Controllers
             this._getTransactions = getTransactions;
         }
 
-        public IActionResult All(string period)
+        public IActionResult All(string period, string page)
         {
             string[] periodAcceptedValues = { "today", "7days", "30days", "all" };
 
@@ -40,24 +40,27 @@ namespace SimpleBankingSystem.Controllers
                 return this.View("/home/error404");
             }
 
-            this.TempData["period"] = period;
+            this.TempData["period"] = period; //used in pdf controller !!!
 
             var user = this._getUserService.GetUser(this._userManager, this.User.Identity.Name);
 
             var selectedTransactions = this._getTransactions.GetUserTransactionsForPeriod(user, period);
 
-            Dictionary<string, string> selectedPeriodReturn = new Dictionary<string, string>
-            {
-                {"today",String.Empty},
-                {"7days",String.Empty},
-                {"30days",String.Empty},
-                {"all",String.Empty}
-            };
+            var singlePageLength = 10;
 
-            if (period != null)
+            var pageToInt = page==null ? 1 : int.Parse(page);
+
+            var totalPages = Math.Ceiling((decimal)selectedTransactions.Count/ singlePageLength);
+
+            if (pageToInt>totalPages || pageToInt<1)
             {
-                selectedPeriodReturn[period] = "selected=\"\"";
+                return this.View("/home/error404");
             }
+
+            var pagedTransactions = selectedTransactions
+                .Skip(singlePageLength * (pageToInt - 1))
+                .Take(singlePageLength)
+                .ToList();
 
             var transactionAllModel = new TransactionAllViewModel
             {
@@ -67,8 +70,10 @@ namespace SimpleBankingSystem.Controllers
                     LastName = user.LastName,
                     PhotoUrl = user.PhotoUrl,
                 },                
-                Transactions = selectedTransactions,
-                selectedPeriodReturnForView = selectedPeriodReturn
+                Transactions = pagedTransactions,
+                PeriodReturn = period,
+                TotalPages = totalPages,
+                CurrentPage = pageToInt,
             };
 
 
