@@ -42,7 +42,7 @@ namespace SimpleBankingSystem.Controllers
 
                 if (transaction == null)
                 {
-                    return this.Redirect("home/error404");
+                    return this.Redirect("/home/error404");
                 }
 
                 var sender = this._context.BankAccounts
@@ -92,11 +92,13 @@ namespace SimpleBankingSystem.Controllers
 
             var pageToInt = page == null ? 1 : int.Parse(page);
 
-            var totalPages = Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength);
+            var totalPages = Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength) == 0 ?
+                1 
+                : Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength);
 
             if (pageToInt > totalPages || pageToInt < 1)
             {
-                return this.View("/home/error404");
+                return this.Redirect("/home/error404");
             }
 
             var pagedTransactions = selectedTransactions

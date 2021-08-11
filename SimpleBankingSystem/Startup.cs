@@ -50,6 +50,7 @@ namespace SimpleBankingSystem
                     options.Password.RequireLowercase = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
+                    options.Password.RequiredUniqueChars = 0;
                 })
 
                 .AddRoles<IdentityRole>()
