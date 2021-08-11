@@ -75,9 +75,9 @@
                     <div class="row">
                         <div class="col" style="margin-left: 140px;margin-right: 140px;">
                             <form action="/admin/adminhome/addnews" method="post">
-                                <input class="form-control" type="text" name="title" style="padding-bottom: 10px;margin-bottom: 0px;" placeholder="Title">
-                                <input class="form-control" type="text" name="ImgUrl" style="margin-top: 34px;" placeholder="Image URL">
-                                <textarea class="form-control" name="description" style="margin-top: 34px;" placeholder="News description" rows="10" spellcheck="true" autofocus=""></textarea>
+                                <input class="form-control" type="text" name="title" style="padding-bottom: 10px;margin-bottom: 0px;" placeholder="Title" required minlength="2" maxlength="150">
+                                <input class="form-control" type="url" name="ImgUrl" style="margin-top: 34px;" placeholder="Image URL" required>
+                                <textarea class="form-control" name="description" style="margin-top: 34px;" placeholder="News description" rows="10" spellcheck="true" autofocus="" required minlength="10"></textarea>
                                 <button class="btn btn-primary active btn-block" type="submit" style="margin-top: 34px;margin-left: 1px;">Add News</button>
                             </form>
                         </div>
