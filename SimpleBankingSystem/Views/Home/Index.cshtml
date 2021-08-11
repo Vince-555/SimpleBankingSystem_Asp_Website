@@ -122,13 +122,13 @@
                     <div>
                         <form action="/home/index" method="post" id="form1">
                         <label style="margin-bottom: 6px;">Receiver Name:</label>
-                        <input class="form-control" type="text" name="receiverName" placeholder="John Doe">
+                        <input class="form-control" type="text" name="receiverName" placeholder="John Doe" required minlength="2" maxlength="30">
                         <label style="margin-bottom: 6px;padding-top: 6px;">Receiver IBAN:</label>
-                        <input class="form-control" type="text" name="receiverIban" placeholder="Enter IBAN here...">
+                        <input class="form-control" type="text" name="receiverIban" placeholder="Enter IBAN here..." required minlength="16" maxlength="31">
                         <label style="margin-bottom: 6px;padding-top: 6px;">Description:</label>
-                        <input class="form-control" type="text" name="description" placeholder="Your description">
+                        <input class="form-control" type="text" name="description" placeholder="Your description" maxlength="200">
                         <label style="margin-bottom: 6px;padding-top: 6px;">Ammount:</label>
-                        <input class="form-control" type="number" min="0" step=".01" name="ammount" placeholder="100.00">
+                        <input class="form-control" type="number" min="0" step=".01" name="ammount" placeholder="100.00" required>
                         <button class="btn btn-primary" type="submit" form="form1" value="Submit" style="margin-top: 20px;width: 128.7031px;">Send</button>
                         </form>
                     </div>

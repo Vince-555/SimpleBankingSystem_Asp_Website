@@ -102,10 +102,10 @@ namespace SimpleBankingSystem.Controllers
                 return this.Redirect("/home/error404"); 
             }
 
-            if (cardName.Length > GeneralInputFieldMaxLenght)
+            if (cardName.Length > GeneralInputFieldMaxLenght || cardName==null)
             {
                 this.TempData["IsError"] = true;
-                this.TempData["Messages"] = new string[] { "Card name is too long"};
+                this.TempData["Messages"] = new string[] { "Card name is too long or missing"};
                 return this.RedirectToAction("AllCards");
             }
 
