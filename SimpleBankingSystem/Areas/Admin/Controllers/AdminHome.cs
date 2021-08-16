@@ -17,13 +17,13 @@ namespace SimpleBankingSystem.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "admin")]
-    public class AdminHomeController :Controller
+    public class AdminHomeController : Controller
     {
         private readonly SBSDbContext _context;
         private readonly IErrorCollector _collector;
         private readonly IGetTransactions _getTransactions;
 
-        public AdminHomeController(SBSDbContext context, 
+        public AdminHomeController(SBSDbContext context,
             IErrorCollector collector,
             IGetTransactions getTransactions)
         {
@@ -93,7 +93,7 @@ namespace SimpleBankingSystem.Controllers
             var pageToInt = page == null ? 1 : int.Parse(page);
 
             var totalPages = Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength) == 0 ?
-                1 
+                1
                 : Math.Ceiling((decimal)selectedTransactions.Count / singlePageLength);
 
             if (pageToInt > totalPages || pageToInt < 1)
@@ -179,6 +179,11 @@ namespace SimpleBankingSystem.Controllers
             }
 
             return this.Redirect("/admin/adminhome/addnews");
+        }
+
+        public IActionResult CustomerService()
+        {
+            return this.View();
         }
 
         private ApplicationUser AdminFinder()
