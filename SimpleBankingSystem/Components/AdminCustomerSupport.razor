@@ -44,7 +44,8 @@ else
         {
             @if (item.IsNotice)
             {
-                <div class="alert alert-info">@item.Body @item.Username <a href="/admin/adminhome/singlechat?username=@item.Username">Start Chat</a></div>
+                string thisHref = $"/admin/adminhome/singlechat?username={item.Username}&isadmin=true";
+                <div class="alert alert-info">@item.Body @item.Username <a href=@thisHref target="popup" onclick="window.open('@thisHref', 'popup', 'width=600,height=400'); return false">Start Chat</a></div>
             }
             else
             {
@@ -102,7 +103,7 @@ else
 
             await _hubConnection.StartAsync();
 
-            await _hubConnection.SendAsync("JoinRoomCSWaiting", _username);
+            await _hubConnection.SendAsync("JoinRoomCSWaiting",_username);
 
         }
         catch (Exception e)
