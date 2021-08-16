@@ -183,7 +183,16 @@ namespace SimpleBankingSystem.Controllers
 
         public IActionResult CustomerService()
         {
-            return this.View();
+            var adminDetails = this.AdminFinder();
+
+            var model = new UserNavbarViewModel
+            {
+                FirstName = adminDetails.FirstName,
+                LastName = adminDetails.LastName,
+                PhotoUrl = adminDetails.PhotoUrl
+            };
+
+            return this.View(model);
         }
 
         private ApplicationUser AdminFinder()

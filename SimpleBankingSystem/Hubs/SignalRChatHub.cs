@@ -37,11 +37,6 @@ namespace SimpleBankingSystem.Hubs
             await Clients.Group(CustomerServiceWaitingRoom).SendAsync("BroadcastToAdmin", username, MessageForAdmin);
         }
 
-        public async Task JoinRoomCSWaitingAdmin()
-        {
-            await Groups.AddToGroupAsync(this.Context.ConnectionId, CustomerServiceWaitingRoom);
-        }
-
         public async Task JoinMainRoom(string usernameForGroup)
         {
             await Groups.AddToGroupAsync(this.Context.ConnectionId, usernameForGroup);
