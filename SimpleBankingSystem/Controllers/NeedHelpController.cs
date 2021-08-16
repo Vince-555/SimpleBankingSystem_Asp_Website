@@ -10,12 +10,9 @@ namespace SimpleBankingSystem.Controllers
     {
         public IActionResult Chat()
         {
-            return this.View();
-        }
-
-        public IActionResult Test()
-        {
-            return this.View();
+            var model = this.User.Identity.Name;
+            
+            return this.View(nameof(Chat),model);
         }
     }
 }

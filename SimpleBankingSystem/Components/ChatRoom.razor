@@ -1,4 +1,5 @@
 ﻿@inject NavigationManager navigationManager
+@inject IJSRuntime JsRuntime
 @using Microsoft.AspNetCore.SignalR.Client;
 @using SimpleBankingSystem.Hubs;
 @using System.Net.Http
@@ -16,12 +17,11 @@
 
 @if (!_isChatting)
 {
-    <p>
-        Enter your name to start chatting:
-    </p>
+    _username = username;
 
-    <input type="text" maxlength="32" @bind="@_username" />
-    <button type="button" @onclick="Chat" ><span class="oi oi-chat" aria-hidden="true"></span> Chat!</button>
+    System.Threading.Thread.Sleep(1000);
+
+    Chat();
 
     // Error messages
     @if (_message != null)
@@ -49,17 +49,20 @@ else
             else
             {
                 <div class="@item.CSS">
-                    <div class="user">@item.Username</div>
+                    <div class="user">@item.Date @item.Username</div>
                     <div class="msg">@item.Body</div>
                 </div>
             }
         }
         <hr />
-        <textarea class="input-lg" placeholder="enter your comment" @bind="@_newMessage"></textarea>
+        <textarea class="input-lg" placeholder="enter you message" @bind="@_newMessage"></textarea>
         <button class="btn btn-default" @onclick="@(()=>SendAsync(_newMessage))">Send</button>
     </div>
 }
 @code {
+    [Parameter]
+    public string username { get; set; }
+
     // flag to indicate chat status
     private bool _isChatting = false;
 
@@ -80,12 +83,6 @@ else
 
     public async Task Chat()
     {
-        // check username is valid
-        if (string.IsNullOrWhiteSpace(_username))
-        {
-            _message = "Please enter a name";
-            return;
-        };
 
         try
         {
@@ -110,6 +107,8 @@ else
             await _hubConnection.StartAsync();
 
             await SendAsync($"[Notice] {_username} joined chat room.");
+
+            await SendAsync($"[Notice] Please wait for an administrator to connect.");
         }
         catch (Exception e)
         {
@@ -139,6 +138,8 @@ else
 
             _hubConnection = null;
             _isChatting = false;
+
+            CloseWindow();
         }
     }
 
@@ -152,6 +153,11 @@ else
         }
     }
 
+    private void CloseWindow()
+    {
+        JsRuntime.InvokeVoidAsync("window.close");
+    }
+
     private class Message
     {
         public Message(string username, string body, bool mine)
@@ -159,11 +165,13 @@ else
             Username = username;
             Body = body;
             Mine = mine;
+            Date = DateTime.Now.ToString("H:m");
         }
 
         public string Username { get; set; }
         public string Body { get; set; }
         public bool Mine { get; set; }
+        public string Date { get; set; }
 
         public bool IsNotice => Body.StartsWith("[Notice]");
 
