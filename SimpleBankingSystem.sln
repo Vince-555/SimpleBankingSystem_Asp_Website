@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBankingSystem", "SimpleBankingSystem\SimpleBankingSystem.csproj", "{742612CE-EFA9-4004-850D-E006A6C50404}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleBankingSystemTests", "SimpleBankingSystemTests\SimpleBankingSystemTests.csproj", "{DC0D2A87-76D7-4697-BFE8-B4F50138918C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleBankingSystemTests", "SimpleBankingSystemTests\SimpleBankingSystemTests.csproj", "{DC0D2A87-76D7-4697-BFE8-B4F50138918C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -16,6 +16,7 @@ namespace SimpleBankingSystem
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Rewrite;
+    using SimpleBankingSystem.Hubs;
 
     public class Startup
     {
@@ -63,6 +64,8 @@ namespace SimpleBankingSystem
 
             services.AddControllersWithViews();
 
+            services.AddServerSideBlazor();
+
             services.ConfigureApplicationCookie
                 (options =>
                 {
@@ -77,6 +80,10 @@ namespace SimpleBankingSystem
             services.AddScoped<IGetTransactions, GetTransactionsService>();
 
             services.AddScoped<DefaultAdminDataSeeder>();
+
+            services.AddSignalR();
+
+            
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DefaultAdminDataSeeder seeder)
@@ -107,7 +114,10 @@ namespace SimpleBankingSystem
                     endpoints.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
+                  );
+                    endpoints.MapBlazorHub();
+                    //endpoints.MapFallbackToPage("/home/index");
+                    endpoints.MapHub<SignalRChatHub>(SignalRChatHub.HubUrl);
                 });
 
             var options = new RewriteOptions().AddRedirectToHttps();
