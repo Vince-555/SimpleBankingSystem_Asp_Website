@@ -48,6 +48,11 @@ namespace SimpleBankingSystem.Hubs
             await Clients.Group(username).SendAsync("BroadcastToMain", username, message);
         }
 
+        public async Task BroadcastToMainForAdmin(string userNameForGroup,string username, string message)
+        {
+            await Clients.Group(userNameForGroup).SendAsync("BroadcastToMain", username, message);
+        }
+
         public async Task BroadcastToAdmin(string username, string message)
         {
             await Clients.Group(CustomerServiceWaitingRoom).SendAsync("broadcastToAdmin", username, message);

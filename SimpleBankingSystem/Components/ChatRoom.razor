@@ -175,7 +175,7 @@ else
             }
             else
             {
-                await _hubConnection.SendAsync("BroadcastToMain", usernameForGroupName, message);
+                await _hubConnection.SendAsync("BroadcastToMainForAdmin",usernameForGroupName,_username, message);
             }
 
             _newMessage = string.Empty;
