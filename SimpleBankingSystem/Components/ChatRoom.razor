@@ -12,7 +12,7 @@
 @using Microsoft.AspNetCore.Components
 @using SimpleBankingSystem
 
-<h1>Blazor SignalR Chat Sample</h1>
+<h1>Customer Chat</h1>
 <hr />
 
 @if (!_isChatting)
@@ -63,6 +63,12 @@ else
     [Parameter]
     public string username { get; set; }
 
+    [Parameter]
+    public string usernameForGroupName { get; set; }
+
+    [Parameter]
+    public bool isAdmin { get; set; }
+
     // flag to indicate chat status
     private bool _isChatting = false;
 
@@ -105,14 +111,26 @@ else
             _hubConnection.On<string, string>("BroadcastToMain", BroadcastMessage);
 
             await _hubConnection.StartAsync();
+            if (!isAdmin)
+            {
+                await _hubConnection.SendAsync("JoinRoomCSWaiting", username);
+                await _hubConnection.SendAsync("JoinMainRoom", username);
+            }
+            else
+            {
+                await _hubConnection.SendAsync("JoinMainRoom", usernameForGroupName);
+            }
 
-            await _hubConnection.SendAsync("JoinRoomCSWaiting", username);
 
-            await _hubConnection.SendAsync("JoinMainRoom", username);
 
             await SendAsync($"[Notice] {_username} joined chat room.");
 
-            await SendAsync($"[Notice] Please wait for an administrator to connect.");
+            if(!isAdmin)
+            {
+                await SendAsync($"[Notice] Please wait for an administrator to connect.");
+            }
+
+          
         }
         catch (Exception e)
         {
@@ -151,7 +169,14 @@ else
     {
         if (_isChatting && !string.IsNullOrWhiteSpace(message))
         {
-            await _hubConnection.SendAsync("BroadcastToMain", _username, message);
+            if(!isAdmin)
+            {
+                await _hubConnection.SendAsync("BroadcastToMain", _username, message);
+            }
+            else
+            {
+                await _hubConnection.SendAsync("BroadcastToMain", usernameForGroupName, message);
+            }
 
             _newMessage = string.Empty;
         }

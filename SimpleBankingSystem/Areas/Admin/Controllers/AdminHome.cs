@@ -195,6 +195,18 @@ namespace SimpleBankingSystem.Controllers
             return this.View(model);
         }
 
+        public IActionResult SingleChat(string usernameforgroup, bool isadmin)
+        {
+            var model = new SingleChatModel
+            {
+                IsAdmin = isadmin,
+                UserNameForGroup = usernameforgroup,
+                Username = "Administrator"
+            };
+
+            return this.View(model);
+        }
+
         private ApplicationUser AdminFinder()
         {
             return this._context.Users

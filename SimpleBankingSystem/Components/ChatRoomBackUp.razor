@@ -12,12 +12,12 @@
 @using Microsoft.AspNetCore.Components
 @using SimpleBankingSystem
 
-<h1>Admin Live Customer Support</h1>
+<h1>Blazor SignalR Chat Sample</h1>
 <hr />
 
 @if (!_isChatting)
 {
-    _username = "Administrator";
+    _username = username;
 
     System.Threading.Thread.Sleep(1000);
 
@@ -36,7 +36,7 @@ else
     <div class="alert alert-secondary mt-4" role="alert">
         <span class="oi oi-person mr-2" aria-hidden="true"></span>
         <span>You are connected as <b>@_username</b></span>
-        
+        <button class="btn btn-sm btn-warning ml-md-auto" @onclick="DisconnectAsync">Disconnect</button>
     </div>
     // display messages
     <div id="scrollbox">
@@ -44,8 +44,7 @@ else
         {
             @if (item.IsNotice)
             {
-                string thisHref = $"/admin/adminhome/singlechat?usernameforgroup={item.Username}&isadmin=true";
-                <div class="alert alert-info">@item.Body @item.Username <a href=@thisHref target="popup" onclick="window.open('@thisHref', 'popup', 'width=600,height=400'); return false">Start Chat</a></div>
+                <div class="alert alert-info">@item.Body</div>
             }
             else
             {
@@ -56,9 +55,13 @@ else
             }
         }
         <hr />
+        <textarea class="input-lg" placeholder="enter you message" @bind="@_newMessage"></textarea>
+        <button class="btn btn-default" @onclick="@(()=>SendAsync(_newMessage))">Send</button>
     </div>
 }
 @code {
+    [Parameter]
+    public string username { get; set; }
 
     // flag to indicate chat status
     private bool _isChatting = false;
@@ -99,12 +102,17 @@ else
                 .WithUrl(_hubUrl)
                 .Build();
 
-            _hubConnection.On<string, string>("BroadcastToAdmin", BroadcastMessage);
+            _hubConnection.On<string, string>("BroadcastToMain", BroadcastMessage);
 
             await _hubConnection.StartAsync();
 
-            await _hubConnection.SendAsync("JoinRoomCSWaiting",_username);
+            await _hubConnection.SendAsync("JoinRoomCSWaiting", username);
 
+            await _hubConnection.SendAsync("JoinMainRoom", username);
+
+            await SendAsync($"[Notice] {_username} joined chat room.");
+
+            await SendAsync($"[Notice] Please wait for an administrator to connect.");
         }
         catch (Exception e)
         {
@@ -161,7 +169,7 @@ else
             Username = username;
             Body = body;
             Mine = mine;
-            Date = DateTime.Now.ToString("H:mm");
+            Date = DateTime.Now.ToString("H:m");
         }
 
         public string Username { get; set; }

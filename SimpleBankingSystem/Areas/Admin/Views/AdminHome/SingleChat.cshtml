@@ -1,5 +1,8 @@
 ﻿@using SimpleBankingSystem.Components
-@model string 
+@using SimpleBankingSystem.Areas.Admin.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model SingleChatModel
+
 <!DOCTYPE html>
 <html>
 
@@ -13,7 +16,7 @@
 
 <body id="page-top">
     <div>
-        <component type="typeof(ChatRoom)" render-mode=ServerPrerendered param-username="Model" param-isAdmin="false" param-usernameForGroupName="String.Empty" />
+        <component type="typeof(ChatRoom)" render-mode=ServerPrerendered param-username="@Model.Username" param-isAdmin="@Model.IsAdmin" param-usernameForGroupName="@Model.UserNameForGroup" />
     </div>
     <script src="~/_framework/blazor.server.js"></script>
 </body>
