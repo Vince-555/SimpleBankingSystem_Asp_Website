@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimpleBankingSystem.Areas.Admin.Models;
@@ -8,10 +7,7 @@ using SimpleBankingSystem.Data.Models;
 using SimpleBankingSystem.Models;
 using SimpleBankingSystem.Services;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimpleBankingSystem.Controllers
 {

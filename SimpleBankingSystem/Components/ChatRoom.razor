@@ -1,16 +1,16 @@
-﻿@inject NavigationManager navigationManager
-@inject IJSRuntime JsRuntime
-@using Microsoft.AspNetCore.SignalR.Client;
-@using SimpleBankingSystem.Hubs;
-@using System.Net.Http
+﻿@using System.Net.Http
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.JSInterop
+@inject NavigationManager navigationManager
+@inject IJSRuntime JsRuntime
+@using Microsoft.AspNetCore.SignalR.Client;
+@using SimpleBankingSystem.Hubs;
 @using Microsoft.AspNetCore.Components
-@using SimpleBankingSystem
+
 
 <h1>Customer Chat</h1>
 <hr />
@@ -125,12 +125,12 @@ else
 
             await SendAsync($"[Notice] {_username} joined chat room.");
 
-            if(!isAdmin)
+            if (!isAdmin)
             {
                 await SendAsync($"[Notice] Please wait for an administrator to connect.");
             }
 
-          
+
         }
         catch (Exception e)
         {
@@ -169,13 +169,13 @@ else
     {
         if (_isChatting && !string.IsNullOrWhiteSpace(message))
         {
-            if(!isAdmin)
+            if (!isAdmin)
             {
                 await _hubConnection.SendAsync("BroadcastToMain", _username, message);
             }
             else
             {
-                await _hubConnection.SendAsync("BroadcastToMainForAdmin",usernameForGroupName,_username, message);
+                await _hubConnection.SendAsync("BroadcastToMainForAdmin", usernameForGroupName, _username, message);
             }
 
             _newMessage = string.Empty;

@@ -1,14 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SimpleBankingSystem.Data;
 using SimpleBankingSystem.Data.Models;
 using SimpleBankingSystem.Models;
 using SimpleBankingSystem.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SimpleBankingSystem.Controllers
 {

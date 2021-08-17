@@ -12,7 +12,6 @@ namespace SimpleBankingSystem
     using SimpleBankingSystem.Data.Models;
     using SimpleBankingSystem.Services;
     using SimpleBankingSystem.Data.DataSeeding;
-    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Rewrite;
