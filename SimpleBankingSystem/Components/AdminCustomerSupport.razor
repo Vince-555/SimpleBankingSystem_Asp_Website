@@ -45,7 +45,8 @@ else
             @if (item.IsNotice)
             {
                 string thisHref = $"/admin/adminhome/singlechat?usernameforgroup={item.Username}&isadmin=true";
-                <div class="alert alert-info">@item.Body @item.Username <a href=@thisHref target="popup" onclick="window.open('@thisHref', 'popup', 'width=600,height=400'); return false">Start Chat</a></div>
+                if (item.Username != "Administrator")
+                {<div class="alert alert-info">@item.Body @item.Username <a href=@thisHref target="popup" onclick="window.open('@thisHref', 'popup', 'width=600,height=400'); return false">Start Chat</a></div>}
             }
             else
             {

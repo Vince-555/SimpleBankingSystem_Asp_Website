@@ -12,29 +12,14 @@ namespace SimpleBankingSystem.Hubs
 
         public const string CustomerServiceWaitingRoom = "CSWait";
 
-        public const string MessageForAdmin = "[Notice] User is waiting for assistance";
-
-        public async Task Broadcast(string username, string message)
-        {
-            await Clients.All.SendAsync("Broadcast", username, message);
-        }
-
-        public override Task OnConnectedAsync()
-        {
-            Console.WriteLine($"{Context.ConnectionId} connected");
-            return base.OnConnectedAsync();
-        }
-
-        public override async Task OnDisconnectedAsync(Exception e)
-        {
-            Console.WriteLine($"Disconnected {e?.Message} {Context.ConnectionId}");
-            await base.OnDisconnectedAsync(e);
-        }
+        public string MessageForAdmin = "[Notice] User is waiting for assistance";
 
         public async Task JoinRoomCSWaiting(string username)
         {
             await Groups.AddToGroupAsync(this.Context.ConnectionId,CustomerServiceWaitingRoom);
-            await Clients.Group(CustomerServiceWaitingRoom).SendAsync("BroadcastToAdmin", username, MessageForAdmin);
+            if(username=="Administrator") { this.MessageForAdmin = "Monitoring requests started successfully."; }
+            await Clients.Group(CustomerServiceWaitingRoom).SendAsync("BroadcastToAdmin", username, this.MessageForAdmin);
+          
         }
 
         public async Task JoinMainRoom(string usernameForGroup)

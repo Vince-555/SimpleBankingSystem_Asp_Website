@@ -56,7 +56,7 @@ else
         }
         <hr />
         <textarea class="input-lg" placeholder="enter you message" @bind="@_newMessage"></textarea>
-        <button class="btn btn-default" @onclick="@(()=>SendAsync(_newMessage))">Send</button>
+        <button class="btn btn-default" @onclick="@(()=>SendAsync(_newMessage))" style="height: 70px; margin-bottom: 60px">Send</button>
     </div>
 }
 @code {
@@ -159,7 +159,7 @@ else
             await _hubConnection.DisposeAsync();
 
             _hubConnection = null;
-            _isChatting = false;
+            //_isChatting = false;
 
             CloseWindow();
         }
@@ -194,7 +194,7 @@ else
             Username = username;
             Body = body;
             Mine = mine;
-            Date = DateTime.Now.ToString("H:m");
+            Date = DateTime.Now.ToString("H:mm");
         }
 
         public string Username { get; set; }
