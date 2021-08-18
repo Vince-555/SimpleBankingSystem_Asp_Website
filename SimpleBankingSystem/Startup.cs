@@ -80,12 +80,15 @@ namespace SimpleBankingSystem
 
             services.AddScoped<DefaultAdminDataSeeder>();
 
+            services.AddScoped<DataSeederForPresentation>();
+
             services.AddSignalR();
 
             
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DefaultAdminDataSeeder seeder)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, DefaultAdminDataSeeder seeder,
+            DataSeederForPresentation presentationData)
         {
             app.PrepareDatabase();
 
@@ -123,6 +126,8 @@ namespace SimpleBankingSystem
             app.UseRewriter(options);
 
             seeder.SeedAdmin().ConfigureAwait(true).GetAwaiter().GetResult();
+
+            presentationData.SeedUsersTransactionsAndNews().ConfigureAwait(true).GetAwaiter().GetResult();
             
             
         }
