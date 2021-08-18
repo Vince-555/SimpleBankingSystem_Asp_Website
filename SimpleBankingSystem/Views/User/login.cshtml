@@ -27,8 +27,8 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="p-5">
-                                    @{ Html.RenderPartial("_SuccessErrorPartial", this.Model); }
-                                    @{ Html.RenderPartial("_CookieConsentPartial"); }
+                                    @{await Html.RenderPartialAsync("_SuccessErrorPartial", this.Model); }
+                                    @{await Html.RenderPartialAsync("_CookieConsentPartial"); }
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Welcome to SBS</h4>
                                         <p>Please log in for the fullest experience.</p>

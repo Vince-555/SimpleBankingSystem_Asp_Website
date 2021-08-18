@@ -107,6 +107,13 @@ namespace SimpleBankingSystem.Controllers
                 return this.RedirectToAction("AllCards");
             }
 
+            if (this._context.Cards.Any(x=>x.CardName==cardName))
+            {
+                this.TempData["IsError"] = true;
+                this.TempData["Messages"] = new string[] { "You already have a card with this name" };
+                return this.RedirectToAction("AllCards");
+            }
+
             if(user.BankAccount.Cards.Count==5)
             { 
                 this.TempData["IsError"] = true;

@@ -20,8 +20,8 @@ namespace SimpleBankingSystem.Models
         public string Description { get; set; }
 
         [Required(ErrorMessage = "Please enter an ammount")]
-        [Range(1,999999,ErrorMessage = "Please enter correct ammount, minimum is 1")]
-        [RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Please enter correct ammount")]
+        [Range(1.0,999999,ErrorMessage = "Please enter correct ammount, minimum is 1.00")]
+        [RegularExpression(@"^\d+.\d{0,2}$", ErrorMessage = "Please enter correct ammount e.g. 1.00")]
         public decimal Ammount { get; set; }
     }
 }

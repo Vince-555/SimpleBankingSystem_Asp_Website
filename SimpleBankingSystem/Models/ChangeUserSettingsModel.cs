@@ -15,6 +15,7 @@ namespace SimpleBankingSystem.Models
         [RegularExpression(@"\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+", ErrorMessage = "Please enter a correct name")]
         public string LastName { get; set; }
 
+        [RegularExpression(EmailRegEx, ErrorMessage = "Please enter a valid email address")]
         [EmailAddress(ErrorMessage ="Please enter a valid email")]
         public string Email { get; set; }
 
